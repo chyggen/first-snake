@@ -87,6 +87,7 @@ class Battlesnake(object):
 
         move = random.choice(possible_moves)
 
+        print(f"possible moves:{possible_moves}")
         print(f"MOVE: {move}")
         return {"move": move}
 

@@ -84,4 +84,5 @@ if "down" in possible_moves:
 
 move = random.choice(possible_moves)
 
+print(f"possible moves:{possible_moves}")
 print(f"MOVE: {move}")
