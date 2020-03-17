@@ -1,6 +1,6 @@
 import os
 import random
-
+import json
 import cherrypy
 
 """
@@ -44,48 +44,45 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
-        #Empty board 
-        board = []
-        for x in range (0, data.board.width):
-            for y in range (0, data.board.height):
-                board[x][y] = "empty"
+        board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
 
         #Set board indicies that are occupied to "head" or "body"
-        for s in range (0, data.snakes.len()):
-            for p in range (data.snakes[s].body.len()):
-                if (board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "empty"):
+        for s in range (0, len(data.get("board").get("snakes"))):
+            for p in range (0, len(data.get("board").get("snakes")[s].get("body"))):
+                if (board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] == "empty"):
                     if (p == 0):
-                        board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "head" 
-                    else: board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "body"
-                        
+                        board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] = "head" 
+                    else: board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] = "body"
+
         #Contains possible moves
         possible_moves = ["up", "down", "left", "right"]
 
-        #Remove the possibility of running into a wall
-        if (data.you.body[0].x == 0):
+        #Remove the possibility of hitting a wall
+        if (data.get("you").get("body")[0].get("x") == 0):
             possible_moves.remove('left')
-        elif (data.you.body[0].x == data.board.width - 1):
+        elif (data.get("you").get("body")[0].get("x") == data.get("board").get("width") - 1):
             possible_moves.remove('right')
 
-        if (data.you.body[0].y == 0):
+        if (data.get("you").get("body")[0].get("y") == 0):
             possible_moves.remove('up')
-        elif (data.you.body[0].y == data.board.height - 1):
+        elif (data.get("you").get("body")[0].get("y") == data.get("board").get("length") - 1):
             possible_moves.remove('down')
 
+        #Remove possibilty of hitting a snake
         if "left" in possible_moves:
-            if (board[data.you.body[0].x - 1][data.you.body[0].y] != "empty" ):
+            if (board[data.get("you").get("body")[0].get("x") - 1][data.get("you").get("body")[0].get("y")] != "empty" ):
                 possible_moves.remove('left')
-        
+
         if "right" in possible_moves:
-            if (board[data.you.body[0].x + 1][data.you.body[0].y] != "empty" ):
+            if (board[data.get("you").get("body")[0].get("x") + 1][data.get("you").get("body")[0].get("y")] != "empty" ):
                 possible_moves.remove('right')
 
         if "up" in possible_moves:
-            if (board[data.you.body[0].x][data.you.body[0].y - 1] != "empty" ):
+            if (board[data.get("you").get("body")[0].get("x")][data.get("you").get("body")[0].get("y") - 1] != "empty" ):
                 possible_moves.remove('up')       
 
         if "down" in possible_moves:
-            if (board[data.you.body[0].x][data.you.body[0].y + 1] != "empty" ):
+            if (board[data.get("you").get("body")[0].get("x")][data.get("you").get("body")[0].get("y") + 1] != "empty" ):
                 possible_moves.remove('down')     
 
         move = random.choice(possible_moves)
