@@ -10,6 +10,7 @@ For instructions see https://github.com/BattlesnakeOfficial/starter-snake-python
 
 
 class Battlesnake(object):
+    
     @cherrypy.expose
     def index(self):
         # If you open your snake URL in a browser you should see this message.
@@ -40,10 +41,53 @@ class Battlesnake(object):
         # TODO: Use the information in cherrypy.request.json to decide your next move.
         data = cherrypy.request.json
 
+        print("current turn:")
         print(data)
 
-        # Choose a random direction to move in
+        #Empty board 
+        board = []
+        for x in range (0, data.board.width):
+            for y in range (0, data.board.height):
+                board[x][y] = "empty"
+
+        #Set board indicies that are occupied to "head" or "body"
+        for s in range (0, data.snakes.len()):
+            for p in range (data.snakes[s].body.len()):
+                if (board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "empty"):
+                    if (p == 0):
+                        board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "head" 
+                    else: board[data.snakes[s].body[p].x][data.snakes[s].body[p].y] == "body"
+                        
+        #Contains possible moves
         possible_moves = ["up", "down", "left", "right"]
+
+        #Remove the possibility of running into a wall
+        if (data.you.body[0].x == 0):
+            possible_moves.remove('left')
+        elif (data.you.body[0].x == data.board.width - 1):
+            possible_moves.remove('right')
+
+        if (data.you.body[0].y == 0):
+            possible_moves.remove('up')
+        elif (data.you.body[0].y == data.board.height - 1):
+            possible_moves.remove('down')
+
+        if "left" in possible_moves:
+            if (board[data.you.body[0].x - 1][data.you.body[0].y] != "empty" ):
+                possible_moves.remove('left')
+        
+        if "right" in possible_moves:
+            if (board[data.you.body[0].x + 1][data.you.body[0].y] != "empty" ):
+                possible_moves.remove('right')
+
+        if "up" in possible_moves:
+            if (board[data.you.body[0].x][data.you.body[0].y - 1] != "empty" ):
+                possible_moves.remove('up')       
+
+        if "down" in possible_moves:
+            if (board[data.you.body[0].x][data.you.body[0].y + 1] != "empty" ):
+                possible_moves.remove('down')     
+
         move = random.choice(possible_moves)
 
         print(f"MOVE: {move}")
