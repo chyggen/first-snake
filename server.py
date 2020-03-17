@@ -65,7 +65,7 @@ class Battlesnake(object):
 
         if (data.get("you").get("body")[0].get("y") == 0):
             possible_moves.remove('up')
-        elif (data.get("you").get("body")[0].get("y") == data.get("board").get("length") - 1):
+        elif (data.get("you").get("body")[0].get("y") == data.get("board").get("height") - 1):
             possible_moves.remove('down')
 
         #Remove possibilty of hitting a snake
