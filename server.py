@@ -44,15 +44,12 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
-       
-
         class coord:
-                def __init__(self, xcoord, ycoord):
-                    self.x = xcoord
-                    self.y = ycoord
+            def __init__(self, xcoord, ycoord):
+                self.x = xcoord
+                self.y = ycoord
 
         class snake:
-            
             def __init__(self, num, size):
                 self.head = coord(data.get("board").get("snakes")[num].get("body")[0].get("x"), \
                                     data.get("board").get("snakes")[num].get("body")[0].get("y"))
@@ -63,7 +60,7 @@ class Battlesnake(object):
 
 
 
-        def check_moves( moves, board, mysnake, snakes):
+        def check_moves(moves, board, mysnake, snakes):
             if (mysnake.head.x == 0):
                 moves.remove('left')
             elif (mysnake.head.x == boardsize.x - 1):
@@ -91,6 +88,52 @@ class Battlesnake(object):
                 if (board[mysnake.head.x][mysnake.head.y + 1] != "empty" ):
                     moves.remove('down')     
 
+        def simulate_move(move, board, mysnake, snakes):
+
+            board_copy = board
+            snakes_copy = snakes
+            mysnake_copy = mysnake
+            next_moves = ["up", "down", "left", "right"]
+
+            #For my snake
+
+            if (move == "left"):
+                snakes_copy[0].head.x -= 1
+                snakes_copy[0].body[0].x -= 1 
+                next_moves.remove("right")
+
+            if (move == "right"):
+                snakes_copy[0].head.x += 1
+                snakes_copy[0].body[0].x += 1
+                next_moves.remove("left")
+
+            if (move == "up"):
+                snakes_copy[0].head.y -= 1
+                snakes_copy[0].body[0].y -= 1 
+                next_moves.remove("down")
+
+            if (move == "down"):
+                snakes_copy[0].head.y += 1
+                snakes_copy[0].body[0].y += 1 
+                next_moves.remove("up")
+
+            #For all snakes
+            for s in range (0, len(snakes_copy)):
+                #For each body part 
+                for p in range(0, len(snakes_copy[s].body) - 1):
+                    #Shift one turn forward
+                    snakes_copy[s].body[p+1] = snakes_copy[s].body[p]
+                #Delete tail
+                del (snakes_copy[s].body[len(snakes_copy[s].body) - 1])
+
+            check_moves(next_moves, board_copy, mysnake_copy, snakes_copy)
+
+
+            if (len(next_moves) == 1):
+                return simulate_move(next_moves[0], board_copy, mysnake_copy, snakes_copy)
+            elif (len(next_moves) == 0):
+                return False
+            else: return True
 
 
 
@@ -120,7 +163,13 @@ class Battlesnake(object):
 
         check_moves(possible_moves, board, mysnake, snakes)
 
+        print (possible_moves)
 
+        move_sim = mysnake
+
+        for i in range(len(possible_moves)-1, -1 , -1):
+            if simulate_move(possible_moves[i], board, mysnake, snakes) == False:
+                possible_moves[i].remove
 
         print(f"possible moves:{possible_moves}")
 
