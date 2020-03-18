@@ -44,50 +44,87 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
+       
+
+        class coord:
+                def __init__(self, xcoord, ycoord):
+                    self.x = xcoord
+                    self.y = ycoord
+
+        class snake:
+            
+            def __init__(self, num, size):
+                self.head = coord(data.get("board").get("snakes")[num].get("body")[0].get("x"), \
+                                    data.get("board").get("snakes")[num].get("body")[0].get("y"))
+                self.body = [coord(data.get("board").get("snakes")[num].get("body")[i].get("x") , \
+                                    data.get("board").get("snakes")[num].get("body")[i].get("y")) \
+                            for i in range (0, len(data.get("board").get("snakes")[num].get("body")))]
+                self.health = data.get("board").get("snakes")[num].get("health")
+
+
+
+        def check_moves( moves, board, mysnake, snakes):
+            if (mysnake.head.x == 0):
+                moves.remove('left')
+            elif (mysnake.head.x == boardsize.x - 1):
+                moves.remove('right')
+
+            if (mysnake.head.y == 0):
+                moves.remove('up')
+            elif (mysnake.head.y == boardsize.y - 1):
+                moves.remove('down')
+
+            #Remove possibilty of hitting a snake
+            if "left" in moves:
+                if (board[mysnake.head.x - 1][mysnake.head.y] != "empty" ):
+                    moves.remove('left')
+
+            if "right" in moves:
+                if (board[mysnake.head.x + 1][mysnake.head.y] != "empty" ):
+                    moves.remove('right')
+
+            if "up" in moves:
+                if (board[mysnake.head.x][mysnake.head.y - 1] != "empty" ):
+                    moves.remove('up')       
+
+            if "down" in moves:
+                if (board[mysnake.head.x][mysnake.head.y + 1] != "empty" ):
+                    moves.remove('down')     
+
+
+
+
+
+        #Interepert game data
+
+        turn = data.get("turn")
+        snakes = [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]
+        mysnake = snake(0, len(data.get("board").get("snakes")[0].get("body")))
         board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
 
-        #Set board indicies that are occupied to "head" or "body"
-        for s in range (0, len(data.get("board").get("snakes"))):
-            for p in range (0, len(data.get("board").get("snakes")[s].get("body"))):
-                if (board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] == "empty"):
+        boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
+
+
+        #Flag board indicies that are occupied by a snake to "head" or "body"
+        for s in range (0, len(snakes)): #For every snake
+            for p in range (0, len(snakes[s].body)): #For each body part of snake "s"
+                if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
                     if (p == 0):
-                        board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] = "head" 
-                    else: board[data.get("board").get("snakes")[s].get("body")[p].get("x")][data.get("board").get("snakes")[s].get("body")[p].get("y")] = "body"
+                        board[snakes[s].body[p].x][snakes[s].body[p].y] = "head" 
+                    else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body"
+
+        #Flag board indicies that contain food
 
         #Contains possible moves
         possible_moves = ["up", "down", "left", "right"]
 
-        #Remove the possibility of hitting a wall
-        if (data.get("you").get("body")[0].get("x") == 0):
-            possible_moves.remove('left')
-        elif (data.get("you").get("body")[0].get("x") == data.get("board").get("width") - 1):
-            possible_moves.remove('right')
+        check_moves(possible_moves, board, mysnake, snakes)
 
-        if (data.get("you").get("body")[0].get("y") == 0):
-            possible_moves.remove('up')
-        elif (data.get("you").get("body")[0].get("y") == data.get("board").get("height") - 1):
-            possible_moves.remove('down')
 
-        #Remove possibilty of hitting a snake
-        if "left" in possible_moves:
-            if (board[data.get("you").get("body")[0].get("x") - 1][data.get("you").get("body")[0].get("y")] != "empty" ):
-                possible_moves.remove('left')
-
-        if "right" in possible_moves:
-            if (board[data.get("you").get("body")[0].get("x") + 1][data.get("you").get("body")[0].get("y")] != "empty" ):
-                possible_moves.remove('right')
-
-        if "up" in possible_moves:
-            if (board[data.get("you").get("body")[0].get("x")][data.get("you").get("body")[0].get("y") - 1] != "empty" ):
-                possible_moves.remove('up')       
-
-        if "down" in possible_moves:
-            if (board[data.get("you").get("body")[0].get("x")][data.get("you").get("body")[0].get("y") + 1] != "empty" ):
-                possible_moves.remove('down')     
-
-        move = random.choice(possible_moves)
 
         print(f"possible moves:{possible_moves}")
+
+        move = random.choice(possible_moves)
         print(f"MOVE: {move}")
         return {"move": move}
 
