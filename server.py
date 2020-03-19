@@ -217,7 +217,7 @@ class Battlesnake(object):
 
         for i in range(len(possible_moves)-1, -1 , -1):
             if simulate_move(possible_moves[i], board, mysnake, [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]) == False:
-                possible_moves[i].remove
+                possible_moves.remove(possible_moves[i])
 
         print(f"possible moves after recursion:{possible_moves}")
 
