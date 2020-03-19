@@ -55,38 +55,83 @@ class Battlesnake(object):
                                     data.get("board").get("snakes")[num].get("body")[0].get("y"))
                 self.body = [coord(data.get("board").get("snakes")[num].get("body")[i].get("x") , \
                                     data.get("board").get("snakes")[num].get("body")[i].get("y")) \
-                            for i in range (0, len(data.get("board").get("snakes")[num].get("body")))]
+                            for i in range(0, len(data.get("board").get("snakes")[num].get("body")))]
                 self.health = data.get("board").get("snakes")[num].get("health")
+
+        def print_board(board):
+            for y in range(len(board[0])):
+                for x in range(len(board)):
+                    print(board[x][y], end = " ")
+                    if (x == len(board)-1):
+                        print("")
+
+
+        def update_board(board, snakes):
+
+            # print("board before update:")
+            # print_board(board)
+            #clear board
+            board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))]
+            
+            #Flag board indicies that are occupied by a snake to "head" or "body"
+            for s in range(0, len(snakes)): #For every snake
+                for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
+                    # print("snake coords:")
+                    # print(snakes[s].body[p].x)
+                    # print(snakes[s].body[p].y)
+                    # print("s,p")
+                    # print(s)
+                    # print(p)
+                    if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
+                        if (p == 0):
+                            board[snakes[s].body[p].x][snakes[s].body[p].y] = "head" 
+                        else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body"
+            
+            # print("board after update:")
+            # print_board(board)
+
+            return board
 
 
 
         def check_moves(moves, board, mysnake, snakes):
-            if (mysnake.head.x == 0):
+
+            print("moves at start:")
+            print(moves)
+
+            if (mysnake.head.x == 0 and "left" in moves):
                 moves.remove('left')
-            elif (mysnake.head.x == boardsize.x - 1):
+            elif (mysnake.head.x == boardsize.x - 1 and "right" in moves):
                 moves.remove('right')
 
-            if (mysnake.head.y == 0):
+            if (mysnake.head.y == 0 and "up" in moves):
                 moves.remove('up')
-            elif (mysnake.head.y == boardsize.y - 1):
+            elif (mysnake.head.y == boardsize.y - 1 and "down" in moves):
                 moves.remove('down')
 
+
+            print("moves after wall collision:")
+            print(moves)
+            
             #Remove possibilty of hitting a snake
             if "left" in moves:
-                if (board[mysnake.head.x - 1][mysnake.head.y] != "empty" ):
+                if (board[snakes[0].head.x - 1][snakes[0].head.y] != "empty" ):
                     moves.remove('left')
 
             if "right" in moves:
-                if (board[mysnake.head.x + 1][mysnake.head.y] != "empty" ):
+                if (board[snakes[0].head.x + 1][snakes[0].head.y] != "empty" ):
                     moves.remove('right')
 
             if "up" in moves:
-                if (board[mysnake.head.x][mysnake.head.y - 1] != "empty" ):
+                if (board[snakes[0].head.x][snakes[0].head.y - 1] != "empty" ):
                     moves.remove('up')       
 
             if "down" in moves:
-                if (board[mysnake.head.x][mysnake.head.y + 1] != "empty" ):
+                if (board[snakes[0].head.x][snakes[0].head.y + 1] != "empty" ):
                     moves.remove('down')     
+            
+            print("moves at end:")
+            print (moves)
 
         def simulate_move(move, board, mysnake, snakes):
 
@@ -95,38 +140,44 @@ class Battlesnake(object):
             mysnake_copy = mysnake
             next_moves = ["up", "down", "left", "right"]
 
+            for s in range(0, len(snakes_copy)):
+                #For each body part 
+                for p in range(len(snakes_copy[s].body) - 1, 0, -1):
+                    #Shift one turn forward
+                    snakes_copy[s].body[p] = snakes_copy[s].body[p-1]
+                #Delete tail
+                #del (snakes_copy[s].body[len(snakes_copy[s].body) - 1])
+
             #For my snake
 
             if (move == "left"):
                 snakes_copy[0].head.x -= 1
-                snakes_copy[0].body[0].x -= 1 
                 next_moves.remove("right")
 
             if (move == "right"):
                 snakes_copy[0].head.x += 1
-                snakes_copy[0].body[0].x += 1
                 next_moves.remove("left")
 
             if (move == "up"):
                 snakes_copy[0].head.y -= 1
-                snakes_copy[0].body[0].y -= 1 
                 next_moves.remove("down")
 
             if (move == "down"):
-                snakes_copy[0].head.y += 1
-                snakes_copy[0].body[0].y += 1 
+                snakes_copy[0].head.y += 1 
                 next_moves.remove("up")
+            
+            snakes_copy[0].body[0] = snakes_copy[0].head
 
-            #For all snakes
-            for s in range (0, len(snakes_copy)):
-                #For each body part 
-                for p in range(0, len(snakes_copy[s].body) - 1):
-                    #Shift one turn forward
-                    snakes_copy[s].body[p+1] = snakes_copy[s].body[p]
-                #Delete tail
-                del (snakes_copy[s].body[len(snakes_copy[s].body) - 1])
+            mysnake = snakes_copy[0]
+
+            board_copy = update_board(board_copy, snakes_copy)
+
+            print_board(board_copy)
 
             check_moves(next_moves, board_copy, mysnake_copy, snakes_copy)
+
+            print(f"move: {move}")
+            print(f"next moves: {next_moves}")
 
 
             if (len(next_moves) == 1):
@@ -149,23 +200,22 @@ class Battlesnake(object):
 
 
         #Flag board indicies that are occupied by a snake to "head" or "body"
-        for s in range (0, len(snakes)): #For every snake
-            for p in range (0, len(snakes[s].body)): #For each body part of snake "s"
+        for s in range(0, len(snakes)): #For every snake
+            for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
                 if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
                     if (p == 0):
                         board[snakes[s].body[p].x][snakes[s].body[p].y] = "head" 
                     else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body"
 
-        #Flag board indicies that contain food
+        #TODO Flag board indicies that contain food
 
         #Contains possible moves
         possible_moves = ["up", "down", "left", "right"]
 
         check_moves(possible_moves, board, mysnake, snakes)
 
-        print (possible_moves)
+        print (f"possible moves: {possible_moves}")
 
-        move_sim = mysnake
 
         for i in range(len(possible_moves)-1, -1 , -1):
             if simulate_move(possible_moves[i], board, mysnake, snakes) == False:
