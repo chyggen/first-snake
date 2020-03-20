@@ -250,6 +250,7 @@ class Battlesnake(object):
 
             move = move_priority[max_idx].move
             return {"move": move}
+        else: return{"move": random.choice(possible_moves)}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
