@@ -143,12 +143,11 @@ class Battlesnake(object):
                 moves.remove('down')     
             
 
-        def simulate_move(move, board, mysnake, snakes):
+        def simulate_move(move, board, mysnake_copy, snakes):
 
             print(f"simulating {move}")
             board_copy = board
             snakes_copy = snakes
-            mysnake_copy = snake(0, len(mysnake.body))
             next_moves = ["up", "down", "left", "right"]
 
             #For all snakes
@@ -201,11 +200,27 @@ class Battlesnake(object):
                 return True
 
 
+        # TODO:
+        # Fix snakes[0] issue                                 -- NOT done
+        # Implement head to head collision prediction         
+        # Allow snake to follow tail                          -- NOTE need to update everything except mysnake.head, then check moves
+        # Add food detection
+
+
+
         #Interepert game data
 
         turn = data.get("turn")
         snakes = [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]
-        mysnake = snake(0, len(data.get("board").get("snakes")[0].get("body")))
+
+        mine = 0
+        for i in range (len(snakes)):
+            if (data.get("board").get("snakes")[i] == data.get("you")):
+                mine = i
+
+        mysnake = snake(mine, len(data.get("you").get("body")))
+        print_snake(mysnake)
+
         board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
 
         boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
@@ -220,26 +235,27 @@ class Battlesnake(object):
                         board[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
                     else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
 
-        #TODO Flag board indicies that contain food
+        # #TODO Flag board indicies that contain food
 
-        #Contains possible moves
+        # #Contains possible moves
 
-        print("original board:")
-        print_board(board)
+        # print("original board:")
+        # print_board(board)
         possible_moves = ["up", "down", "right", "left"]
+
+
 
         check_moves(possible_moves, board, mysnake, snakes)
 
         print (f"possible moves at start: {possible_moves}")
 
         for i in range(len(possible_moves)-1, -1 , -1):
-            if simulate_move(possible_moves[i], board, mysnake, [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]) == False:
+            if simulate_move(possible_moves[i], board, snake(mine, len(mysnake.body)), [snake(num, len(snakes[num].body)) for num in range(0, len(snakes))]) == False:
                 possible_moves.remove(possible_moves[i])
 
         print(f"possible moves after recursion:{possible_moves}")
 
         if (mysnake.health > 50):
-
             max_idx = 0
             priorities = [0, 0, 0, 0]
 
@@ -261,13 +277,13 @@ class Battlesnake(object):
                     max_idx = i
 
 
-
             move = move_priority[max_idx].move
-            print(f"move: {move}")
-            return {"move": move}
-        else: 
-            print("picking random")
-            return{"move": random.choice(possible_moves)}
+            print(f"moving towards middle: {move}")
+            return{"move": move}
+        else:
+            move = random.choice(possible_moves)
+            print (f"picking random: {move}")
+            return{"move": move}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()

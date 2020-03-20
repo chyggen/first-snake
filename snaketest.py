@@ -144,12 +144,11 @@ def check_moves(moves, board, mysnake, snakes):
         moves.remove('down')     
     
 
-def simulate_move(move, board, mysnake, snakes):
+def simulate_move(move, board, mysnake_copy, snakes):
 
     print(f"simulating {move}")
     board_copy = board
     snakes_copy = snakes
-    mysnake_copy = snake(0, len(mysnake.body))
     next_moves = ["up", "down", "left", "right"]
 
     #For all snakes
@@ -203,7 +202,7 @@ def simulate_move(move, board, mysnake, snakes):
 
 
 # TODO:
-# Fix snakes[0] issue                                 -- should be done
+# Fix snakes[0] issue                                 -- NOT done
 # Implement head to head collision prediction         
 # Allow snake to follow tail                          -- NOTE need to update everything except mysnake.head, then check moves
 # Add food detection
@@ -214,20 +213,28 @@ def simulate_move(move, board, mysnake, snakes):
 
 turn = data.get("turn")
 snakes = [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]
-mysnake = snake(0, len(data.get("you").get("body")))
+
+mine = 0
+for i in range (len(snakes)):
+    if (data.get("board").get("snakes")[i] == data.get("you")):
+        mine = i
+
+mysnake = snake(mine, len(data.get("you").get("body")))
+print_snake(mysnake)
+
 board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
 
 boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
 
 
 
-# #Flag board indicies that are occupied by a snake to "head" or "body"
-# for s in range(0, len(snakes)): #For every snake
-#     for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-#         if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
-#             if (p == 0):
-#                 board[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
-#             else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
+#Flag board indicies that are occupied by a snake to "head" or "body"
+for s in range(0, len(snakes)): #For every snake
+    for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
+        if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
+            if (p == 0):
+                board[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
+            else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
 
 # #TODO Flag board indicies that contain food
 
@@ -244,32 +251,37 @@ check_moves(possible_moves, board, mysnake, snakes)
 print (f"possible moves at start: {possible_moves}")
 
 for i in range(len(possible_moves)-1, -1 , -1):
-    if simulate_move(possible_moves[i], board, mysnake, snakes) == False:
+    if simulate_move(possible_moves[i], board, snake(mine, len(mysnake.body)), [snake(num, len(snakes[num].body)) for num in range(0, len(snakes))]) == False:
         possible_moves.remove(possible_moves[i])
 
 print(f"possible moves after recursion:{possible_moves}")
 
-max_idx = 0
-priorities = [0, 0, 0, 0]
+if (mysnake.health > 50):
+    max_idx = 0
+    priorities = [0, 0, 0, 0]
 
-for i in range(0, len(possible_moves)):
-    if (possible_moves[i] == "left"):
-        priorities[i] = mysnake.body[0].x
-    elif (possible_moves[i] == "right"):
-        priorities[i] = boardsize.x - mysnake.body[0].x - 1
-    elif (possible_moves[i] == "up"):
-        priorities[i] = mysnake.body[0].y
-    elif (possible_moves[i] == "down"):
-        priorities[i] = boardsize.y - mysnake.body[0].y - 1
+    for i in range(0, len(possible_moves)):
+        if (possible_moves[i] == "left"):
+            priorities[i] = mysnake.body[0].x
+        elif (possible_moves[i] == "right"):
+            priorities[i] = boardsize.x - mysnake.body[0].x - 1
+        elif (possible_moves[i] == "up"):
+            priorities[i] = mysnake.body[0].y
+        elif (possible_moves[i] == "down"):
+            priorities[i] = boardsize.y - mysnake.body[0].y - 1
 
-move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
+    move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
 
-for i in range(len(possible_moves)):
-    print(move_priority[i].move, move_priority[i].priority)
-    if (move_priority[max_idx].priority < move_priority[i].priority):
-        max_idx = i
+    for i in range(len(possible_moves)):
+        print(move_priority[i].move, move_priority[i].priority)
+        if (move_priority[max_idx].priority < move_priority[i].priority):
+            max_idx = i
 
 
 
-move = move_priority[max_idx].move
-print(f"move: {move}")
+    move = move_priority[max_idx].move
+    print(f"moving towards middle: {move}")
+
+else:
+    move = random.choice(possible_moves)
+    print (f"picking random: {move}")
