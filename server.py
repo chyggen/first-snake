@@ -226,28 +226,30 @@ class Battlesnake(object):
 
         print(f"possible moves after recursion:{possible_moves}")
 
-        max_idx = 0
-        priorities = [0, 0, 0, 0]
+        if (mysnake.health > 50):
 
-        for i in range(0, len(possible_moves)):
-            if (possible_moves[i] == "left"):
-                priorities[i] = mysnake.body[0].x
-            elif (possible_moves[i] == "right"):
-                priorities[i] = boardsize.x - mysnake.body[0].x - 1
-            elif (possible_moves[i] == "up"):
-                priorities[i] = mysnake.body[0].y
-            elif (possible_moves[i] == "down"):
-                priorities[i] = boardsize.y - mysnake.body[0].y - 1
+            max_idx = 0
+            priorities = [0, 0, 0, 0]
 
-        move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
+            for i in range(0, len(possible_moves)):
+                if (possible_moves[i] == "left"):
+                    priorities[i] = mysnake.body[0].x
+                elif (possible_moves[i] == "right"):
+                    priorities[i] = boardsize.x - mysnake.body[0].x - 1
+                elif (possible_moves[i] == "up"):
+                    priorities[i] = mysnake.body[0].y
+                elif (possible_moves[i] == "down"):
+                    priorities[i] = boardsize.y - mysnake.body[0].y - 1
 
-        for i in range(len(possible_moves)):
-            print(move_priority[i].move, move_priority[i].priority)
-            if (move_priority[max_idx].priority < move_priority[i].priority):
-                max_idx = i
+            move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
 
-        move = move_priority[max_idx].move
-        return {"move": move}
+            for i in range(len(possible_moves)):
+                print(move_priority[i].move, move_priority[i].priority)
+                if (move_priority[max_idx].priority < move_priority[i].priority):
+                    max_idx = i
+
+            move = move_priority[max_idx].move
+            return {"move": move}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
