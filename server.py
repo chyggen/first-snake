@@ -243,7 +243,7 @@ class Battlesnake(object):
 
         for i in range(len(possible_moves)):
             print(move_priority[i].move, move_priority[i].priority)
-            if (max_idx < move_priority[i].priority):
+            if (move_priority[max_idx].priority < move_priority[i].priority):
                 max_idx = i
 
         move = move_priority[max_idx].move

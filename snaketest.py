@@ -19,7 +19,7 @@ data = {
           "name": "Sneky Snek",
           "health": 90,
           "body": [
-            {'x': 10, 'y': 1}, {"x": 9, "y": 1}, {'x': 8, 'y':1}, {'x': 7, 'y':1}, {'x': 6, 'y': 1}, {'x': 5, 'y': 1}, {'x': 4, 'y': 1}
+            {'x': 4, 'y': 6}, {"x": 4, "y": 5}, {'x': 4, 'y':4}
           ],
           "shout": "Hello my name is Sneky Snek"
         },
@@ -28,7 +28,7 @@ data = {
       "name": "Sneky Snek",
       "health": 90,
       "body": [
-        {"x": 0, "y": 0}, {'x': 0, 'y':1}, {'x': 0, 'y':2}, {'x': 0, 'y': 3}
+        {'x': 4, 'y': 6}, {"x": 4, "y": 5}, {'x': 4, 'y':4}
       ],
       "shout": "Hello my name is Sneky Snek"
     }
@@ -252,8 +252,10 @@ move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, le
 
 for i in range(len(possible_moves)):
     print(move_priority[i].move, move_priority[i].priority)
-    if (max_idx < move_priority[i].priority):
+    if (move_priority[max_idx].priority< move_priority[i].priority):
         max_idx = i
+
+
 
 move = move_priority[max_idx].move
 print(f"move: {move}")
