@@ -236,8 +236,6 @@ for i in range(len(possible_moves)-1, -1 , -1):
 print(f"possible moves after recursion:{possible_moves}")
 
 max_idx = 0
-#time.sleep(5)
-
 priorities = [0, 0, 0, 0]
 
 for i in range(0, len(possible_moves)):

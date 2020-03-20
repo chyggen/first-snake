@@ -44,6 +44,11 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
+        class priority:
+            def __init__(self, move, num):
+                self.move = move
+                self.priority = num
+
         class coord:
             def __init__(self, xcoord, ycoord):
                 self.x = xcoord
@@ -221,8 +226,27 @@ class Battlesnake(object):
 
         print(f"possible moves after recursion:{possible_moves}")
 
-        move = random.choice(possible_moves)
-        print(f"random move: {move}")
+        max_idx = 0
+        priorities = [0, 0, 0, 0]
+
+        for i in range(0, len(possible_moves)):
+            if (possible_moves[i] == "left"):
+                priorities[i] = mysnake.body[0].x
+            elif (possible_moves[i] == "right"):
+                priorities[i] = boardsize.x - mysnake.body[0].x - 1
+            elif (possible_moves[i] == "up"):
+                priorities[i] = mysnake.body[0].y
+            elif (possible_moves[i] == "down"):
+                priorities[i] = boardsize.y - mysnake.body[0].y - 1
+
+        move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
+
+        for i in range(len(possible_moves)):
+            print(move_priority[i].move, move_priority[i].priority)
+            if (max_idx < move_priority[i].priority):
+                max_idx = i
+
+        move = move_priority[max_idx].move
         return {"move": move}
 
     @cherrypy.expose
