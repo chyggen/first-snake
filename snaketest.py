@@ -1,5 +1,6 @@
 import json
 import random
+import time
 
 data = {
     "game": {
@@ -57,6 +58,11 @@ class snake:
                                data.get("board").get("snakes")[num].get("body")[i].get("y")) \
                     for i in range(0, len(data.get("board").get("snakes")[num].get("body")))]
         self.health = data.get("board").get("snakes")[num].get("health")
+
+class priority:
+    def __init__(self, move, num):
+        self.move = move
+        self.priority = num
 
 def print_board(board):
     for y in range(len(board[0])):
@@ -191,8 +197,6 @@ def simulate_move(move, board, mysnake, snakes):
     else: 
         print(f"move {move} valid, exiting")
         return True
-        
-
 
 #Interepert game data
 
@@ -226,10 +230,32 @@ check_moves(possible_moves, board, mysnake, snakes)
 print (f"possible moves at start: {possible_moves}")
 
 for i in range(len(possible_moves)-1, -1 , -1):
-    if simulate_move(possible_moves[i], board, mysnake, [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]) == False:
+    if simulate_move(possible_moves[i], board, mysnake, snakes) == False:
         possible_moves.remove(possible_moves[i])
-        
+
 print(f"possible moves after recursion:{possible_moves}")
 
-move = random.choice(possible_moves)
-print(f"random move: {move}")
+max_idx = 0
+#time.sleep(5)
+
+priorities = [0, 0, 0, 0]
+
+for i in range(0, len(possible_moves)):
+    if (possible_moves[i] == "left"):
+        priorities[i] = mysnake.body[0].x
+    elif (possible_moves[i] == "right"):
+        priorities[i] = boardsize.x - mysnake.body[0].x - 1
+    elif (possible_moves[i] == "up"):
+        priorities[i] = mysnake.body[0].y
+    elif (possible_moves[i] == "down"):
+        priorities[i] = boardsize.y - mysnake.body[0].y - 1
+
+move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
+
+for i in range(len(possible_moves)):
+    print(move_priority[i].move, move_priority[i].priority)
+    if (max_idx < move_priority[i].priority):
+        max_idx = i
+
+move = move_priority[max_idx].move
+print(f"move: {move}")
