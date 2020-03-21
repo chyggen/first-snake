@@ -228,22 +228,11 @@ class Battlesnake(object):
 
         boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
 
-
-
-        #Flag board indicies that are occupied by a snake to "head" or "body"
-        for s in range(0, len(snakes)): #For every snake
-            for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-                if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
-                    if (p == 0):
-                        board[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
-                    else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
+        board = update_board(board, snakes, mysnake)
 
         # #TODO Flag board indicies that contain food
 
-        # #Contains possible moves
-
-        # print("original board:")
-        # print_board(board)
+        
         possible_moves = ["up", "down", "right", "left"]
 
 

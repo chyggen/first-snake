@@ -28,7 +28,7 @@ data = {
           "name": "Sneky Snek",
           "health": 90,
           "body": [
-            {"x": 8, "y": 0}, {'x': 8, 'y':1}, {'x': 7, 'y':1}, {'x': 6, 'y': 1}, {'x': 5, 'y': 1}, {'x': 4, 'y': 1}
+            {"x": 6, "y": 6}, {'x': 7, 'y':6}, {'x': 8, 'y':6} 
           ],
           "shout": "Hello my name is Sneky Snek"
     }
@@ -39,8 +39,8 @@ data = {
       "name": "Sneky Snek",
       "health": 90,
       "body": [
-        {"x": 8, "y": 0}, {'x': 8, 'y':1}, {'x': 7, 'y':1}, {'x': 6, 'y': 1}, {'x': 5, 'y': 1}, {'x': 4, 'y': 1}
-      ],
+        {"x": 6, "y": 6}, {'x': 7, 'y':6}, {'x': 8, 'y':6} 
+          ],
       "shout": "Hello my name is Sneky Snek"
     }
   }
@@ -137,6 +137,7 @@ def check_moves(moves, board, mysnake, snakes):
     #Remove possibilty of hitting a snake
     if "left" in moves and (board[mysnake.body[0].x - 1][mysnake.body[0].y] != "empty" ):
         moves.remove('left')
+        print("left occupied")
 
     if "right" in moves and (board[mysnake.body[0].x + 1][mysnake.body[0].y] != "empty" ):
         moves.remove('right')
@@ -228,7 +229,7 @@ board = [["empty" for i in range(0, data.get("board").get("width"))] for j in ra
 
 boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
 
-update_board(board, snakes, mysnake)
+board = update_board(board, snakes, mysnake)
 
 # TODO Flag board indicies that contain food
 
