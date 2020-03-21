@@ -81,7 +81,7 @@ class Battlesnake(object):
                 print(f"x : {snake.body[i].x}, y : {snake.body[i].y} ")
 
 
-        def update_board(board, snakes, mysnake):
+                def update_board(board, snakes, mysnake):
 
             # print("board before update:")
             # print_board(board)
@@ -92,16 +92,19 @@ class Battlesnake(object):
             #Flag board indecies that are occupied by another snake to "head" or "body"
             for s in range(0, len(snakes)): #For every snake
                 for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-                    # print("snake coords:")
-                    # print(snakes[s].body[p].x)
-                    # print(snakes[s].body[p].y)
-                    # print("s,p")
-                    # print(s)
-                    # print(p)
-                    if (board_copy[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
+                    if (s != mine):
                         if (p == 0):
                             board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
+                            board_copy[snakes[s].body[p].x + 1][snakes[s].body[p].y] = "next "
+                            board_copy[snakes[s].body[p].x - 1][snakes[s].body[p].y] = "next "
+                            board_copy[snakes[s].body[p].x][snakes[s].body[p].y + 1] = "next "
+                            board_copy[snakes[s].body[p].x][snakes[s].body[p].y - 1] = "next "
+
                         else: board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
+
+                
+
+            
 
             #Flag board indecies that contain my snake
             for p in range(0, len(mysnake.body)):
@@ -109,10 +112,10 @@ class Battlesnake(object):
                     board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mhead" 
                 else: board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mbody"
 
+            #Flag potential moves by other snakes
             
-            print("board after update:")
+            #print("board after update:")
             print_board(board_copy)
-
             return board_copy
 
 

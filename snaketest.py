@@ -46,9 +46,9 @@ data = {
   }
 
 class coord:
-        def __init__(self, xcoord, ycoord):
-            self.x = xcoord
-            self.y = ycoord
+    def __init__(self, xcoord, ycoord):
+        self.x = xcoord
+        self.y = ycoord
 
 
 class snake:
@@ -93,16 +93,19 @@ def update_board(board, snakes, mysnake):
     #Flag board indecies that are occupied by another snake to "head" or "body"
     for s in range(0, len(snakes)): #For every snake
         for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-            # print("snake coords:")
-            # print(snakes[s].body[p].x)
-            # print(snakes[s].body[p].y)
-            # print("s,p")
-            # print(s)
-            # print(p)
-            if (board_copy[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
+            if (s != mine):
                 if (p == 0):
                     board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
+                    board_copy[snakes[s].body[p].x + 1][snakes[s].body[p].y] = "next "
+                    board_copy[snakes[s].body[p].x - 1][snakes[s].body[p].y] = "next "
+                    board_copy[snakes[s].body[p].x][snakes[s].body[p].y + 1] = "next "
+                    board_copy[snakes[s].body[p].x][snakes[s].body[p].y - 1] = "next "
+
                 else: board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
+
+        
+
+    
 
     #Flag board indecies that contain my snake
     for p in range(0, len(mysnake.body)):
@@ -110,8 +113,9 @@ def update_board(board, snakes, mysnake):
             board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mhead" 
         else: board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mbody"
 
+    #Flag potential moves by other snakes
     
-    print("board after update:")
+    #print("board after update:")
     print_board(board_copy)
 
     return board_copy
@@ -202,7 +206,6 @@ def simulate_move(move, board, mysnake_copy, snakes):
 
 
 # TODO:
-# Fix snakes[0] issue                                 -- NOT done
 # Implement head to head collision prediction         
 # Allow snake to follow tail                          -- NOTE need to update everything except mysnake.head, then check moves
 # Add food detection
@@ -220,30 +223,16 @@ for i in range (len(snakes)):
         mine = i
 
 mysnake = snake(mine, len(data.get("you").get("body")))
-print_snake(mysnake)
 
 board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
 
 boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
 
+update_board(board, snakes, mysnake)
 
+# TODO Flag board indicies that contain food
 
-#Flag board indicies that are occupied by a snake to "head" or "body"
-for s in range(0, len(snakes)): #For every snake
-    for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-        if (board[snakes[s].body[p].x][snakes[s].body[p].y] == "empty"): 
-            if (p == 0):
-                board[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
-            else: board[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
-
-# #TODO Flag board indicies that contain food
-
-# #Contains possible moves
-
-# print("original board:")
-# print_board(board)
 possible_moves = ["up", "down", "right", "left"]
-
 
 
 check_moves(possible_moves, board, mysnake, snakes)
