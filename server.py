@@ -81,7 +81,7 @@ class Battlesnake(object):
                 print(f"x : {snake.body[i].x}, y : {snake.body[i].y} ")
 
 
-                def update_board(board, snakes, mysnake):
+        def update_board(board, snakes, mysnake):
 
             # print("board before update:")
             # print_board(board)
