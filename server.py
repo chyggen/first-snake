@@ -44,26 +44,74 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
-        class coord:
+                class coord:
             def __init__(self, xcoord, ycoord):
                 self.x = xcoord
                 self.y = ycoord
 
 
+        class get_data:
+            def __init__(self):
+                self.boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
+                self.food = [coord(data.get("board").get("food")[i].get("x"), data.get("board").get("food")[i].get("y")) \
+                            for i in range(len(data.get("board").get("food")))]
+                self.turn = data.get("turn")
+                self.snakes = len(data.get("board").get("snakes"))
+
+
         class snake:
-            def __init__(self, num, size):
-                self.head = coord(data.get("board").get("snakes")[num].get("body")[0].get("x"), \
-                                    data.get("board").get("snakes")[num].get("body")[0].get("y"))
+            def __init__(self, num):
                 self.body = [coord(data.get("board").get("snakes")[num].get("body")[i].get("x") , \
-                                    data.get("board").get("snakes")[num].get("body")[i].get("y")) \
+                                data.get("board").get("snakes")[num].get("body")[i].get("y")) \
                             for i in range(0, len(data.get("board").get("snakes")[num].get("body")))]
+                self.head = self.body[0]
                 self.health = data.get("board").get("snakes")[num].get("health")
+                self.size = len(data.get("board").get("snakes")[num].get("body"))
 
 
-        class priority:
-            def __init__(self, move, num):
-                self.move = move
-                self.priority = num
+
+        def empty_board():
+            board = [["empty" for i in range(Gdata.boardsize.x)] for j in range(Gdata.boardsize.y)]
+            return board
+
+
+        def update_board(allsnakes):
+            updated_board = empty_board()
+
+            #Add food to board
+            for i in range(len(Gdata.food)):
+                updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
+
+            #Add snakes to board
+            for i in range(Gdata.snakes):
+                for j in range(allsnakes[i].size -1, -1, -1):
+                    if (i == mine): # If its my snake, label body parts with M
+                        if (j == 0):
+                            updated_board[allsnakes[i].head.x][allsnakes[i].head.y] = "Mhead"
+                        else:
+                            updated_board[allsnakes[i].body[j].x][allsnakes[i].body[j].y] = "Mbody"
+                    else: # If its not my snake, label body parts with that snake's index
+                        if (j == 0):
+                            updated_board[allsnakes[i].head.x][allsnakes[i].head.y] = f"{i}head"
+                        else:
+                            updated_board[allsnakes[i].body[j].x][allsnakes[i].body[j].y] = f"{i}body"
+
+            #Add potential next moves
+            for i in range(Gdata.snakes):
+                #Only want other snake's moves and only want potential moves in open spaces
+                if (i != mine):
+                    head = coord(allsnakes[i].head.x, allsnakes[i].head.y)
+
+                    if (updated_board[head.x + 1][head.y] in {"empty", "food"}) and head.x != Gdata.boardsize.x - 1:
+                        updated_board[head.x + 1][head.y] = f"{i}next"
+                    if (updated_board[head.x - 1][head.y] in {"empty", "food"}) and head.x != 0:
+                        updated_board[head.x - 1][head.y] = f"{i}next"
+                    if (updated_board[head.x][head.y + 1] in {"empty", "food"}) and head.y != Gdata.boardsize.y - 1:
+                        updated_board[head.x][head.y + 1] = f"{i}next"
+                    if (updated_board[head.x][head.y - 1] in {"empty", "food"}) and head.y != 0:
+                        updated_board[head.x][head.y - 1] = f"{i}next"
+                
+            return updated_board
 
 
         def print_board(board):
@@ -80,202 +128,148 @@ class Battlesnake(object):
             for i in range(len(snake.body)):
                 print(f"x : {snake.body[i].x}, y : {snake.body[i].y} ")
 
+        def move(snake, move):
+                if move == "left":
+                    snake.head.x -= 1
+                if move == "right":
+                    snake.head.x += 1
+                if move == "up":
+                    snake.head.y -= 1
+                if move == "down":
+                    snake.head.y += 1
 
-        def update_board(board, snakes, mysnake):
+        def check_moves(mysnake, board):
+            moves = {"left": 0, "right": 0, "up": 0, "down": 0}
 
-            # print("board before update:")
-            # print_board(board)
-            #clear board
-            board_copy = board
-            board_copy = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))]
+            #Remove possibility of hitting a wall or the body of a snake
+            if (mysnake.body[0].x == 0 or board[mysnake.body[0].x - 1][mysnake.body[0].y][1:5] == "body"): 
+                del moves["left"]
+            elif (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
+                del moves["right"]
+            if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+                del moves["up"]
+            elif (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+                del moves["down"]
+
+            #Assign a score to each move based on whats in that square
+            if "left" in moves.keys():
+                square = board[mysnake.body[0].x - 1][mysnake.body[0].y]
+                if square in {"empty", "food "}:
+                    moves["left"] = 2
+                elif square[1:5] == "next":
+                    if mysnake.size > allsnakes[int(square[0])].size:
+                        moves["left"] = 3
+                    else:
+                        moves["left"] = 1
+
+            if "right" in moves.keys():
+                square = board[mysnake.body[0].x + 1][mysnake.body[0].y]
+                if square in {"empty", "food "}:
+                    moves["right"] = 2
+                elif square[1:5] == "next":
+                    if mysnake.size > allsnakes[int(square[0])].size:
+                        moves["right"] = 3
+                    else:
+                        moves["right"] = 1
+
+            if "up" in moves.keys():
+                square = board[mysnake.body[0].x][mysnake.body[0].y - 1]
+                if square in {"empty", "food "}:
+                    moves["up"] = 2
+                elif square[1:5] == "next":
+                    if mysnake.size > allsnakes[int(square[0])].size:
+                        moves["up"] = 3
+                    else:
+                        moves["up"] = 1
+
+            if "down" in moves.keys():
+                square = board[mysnake.body[0].x][mysnake.body[0].y + 1]
+                if square in {"empty", "food "}:
+                    moves["down"] = 2
+                elif square[1:5] == "next":
+                    if mysnake.size > allsnakes[int(square[0])].size:
+                        moves["down"] = 3
+                    else:
+                        moves["down"] = 1
+
+            return moves
             
-            #Flag board indecies that are occupied by another snake to "head" or "body"
-            for s in range(0, len(snakes)): #For every snake
-                for p in range(0, len(snakes[s].body)): #For each body part of snake "s"
-                    if (s != mine):
-                        if (p == 0):
-                            board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "head " 
-                            board_copy[snakes[s].body[p].x + 1][snakes[s].body[p].y] = "next "
-                            board_copy[snakes[s].body[p].x - 1][snakes[s].body[p].y] = "next "
-                            board_copy[snakes[s].body[p].x][snakes[s].body[p].y + 1] = "next "
-                            board_copy[snakes[s].body[p].x][snakes[s].body[p].y - 1] = "next "
 
-                        else: board_copy[snakes[s].body[p].x][snakes[s].body[p].y] = "body "
+        def simulate_move(allsnakes, itteration):
 
-                
-
-            
-
-            #Flag board indecies that contain my snake
-            for p in range(0, len(mysnake.body)):
-                if (p == 0):
-                    board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mhead" 
-                else: board_copy[mysnake.body[p].x][mysnake.body[p].y] = "Mbody"
-
-            #Flag potential moves by other snakes
-            
-            #print("board after update:")
-            print_board(board_copy)
-            return board_copy
-
-
-        def check_moves(moves, board, mysnake, snakes):
-
-            if (mysnake.body[0].x == 0 and "left" in moves):
-                moves.remove('left')
-            elif (mysnake.body[0].x == boardsize.x - 1 and "right" in moves):
-                moves.remove('right')
-
-            if (mysnake.body[0].y == 0 and "up" in moves):
-                moves.remove('up')
-            elif (mysnake.body[0].y == boardsize.y - 1 and "down" in moves):
-                moves.remove('down')
-
-
-            #Remove possibilty of hitting a snake
-            if "left" in moves and (board[mysnake.body[0].x - 1][mysnake.body[0].y] != "empty" ):
-                moves.remove('left')
-
-            if "right" in moves and (board[mysnake.body[0].x + 1][mysnake.body[0].y] != "empty" ):
-                moves.remove('right')
-
-            if "up" in moves and (board[mysnake.body[0].x][mysnake.body[0].y - 1] != "empty" ):
-                moves.remove('up')       
-
-            if "down" in moves and (board[mysnake.body[0].x][mysnake.body[0].y + 1] != "empty" ):
-                moves.remove('down')     
-            
-
-        def simulate_move(move, board, mysnake_copy, snakes):
-
-            print(f"simulating {move}")
-            board_copy = board
-            snakes_copy = snakes
-            next_moves = ["up", "down", "left", "right"]
-
+            allsnakes_copy = copy.deepcopy(allsnakes)
+            mysnake_copy = allsnakes_copy[mine]
             #For all snakes
-            for s in range(0, len(snakes_copy)):
-                #For each body part 
-                for p in range(len(snakes_copy[s].body) -1, 0, -1):
+            for s in range(Gdata.snakes):
+                #For each body part, starting at the tail
+                for p in range(allsnakes_copy[s].size -1, 0, -1):
                     #Shift one turn forward
-                    snakes_copy[s].body[p] = coord(snakes_copy[s].body[p-1].x, snakes_copy[s].body[p-1].y)
+                    allsnakes_copy[s].body[p] = coord(allsnakes_copy[s].body[p-1].x, allsnakes_copy[s].body[p-1].y)
 
-            #For my snake
-            for p in range(len(mysnake_copy.body) -1, 0, -1):
-                #Shift one turn forward
-                mysnake_copy.body[p] = coord(mysnake_copy.body[p-1].x, mysnake_copy.body[p-1].y)
+            new_board = update_board(allsnakes_copy)  
 
-            if (move == "left"):
-                mysnake_copy.head.x -= 1
-                next_moves.remove("right")
+            print("Updated board:")
+            print_board(new_board)
 
-            if (move == "right"):
-                mysnake_copy.head.x += 1
-                next_moves.remove("left")
+            possible_moves = check_moves(mysnake_copy, new_board)
+            print (f"Possible moves: {possible_moves}")
 
-            if (move == "up"):
-                mysnake_copy.head.y -= 1
-                next_moves.remove("down")
+            if itteration == 0:
+                for k in possible_moves.keys() :
+                    allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
+                    move(allsnakes_copy2[mine], k)
+                    if simulate_move(allsnakes_copy2, itteration + 1) == False:
+                        possible_moves.remove(k)
+                    
+                max = 0
+                for k in possible_moves.keys():
+                    if possible_moves[k] > max:
+                        max = possible_moves[k]
 
-            if (move == "down"):
-                mysnake_copy.head.y += 1 
-                next_moves.remove("up")
+                final_moves = copy.deepcopy(possible_moves)
 
-            mysnake_copy.body[0] = mysnake_copy.head 
+                for k in possible_moves.keys():
+                    if possible_moves[k] != max:
+                        del final_moves[k]
+                        
 
-            board_copy = update_board(board_copy, snakes_copy, mysnake_copy)
+                return final_moves
 
-            print("printing my snake copy:")
-            print_snake(mysnake_copy)
-
-            check_moves(next_moves, board_copy, mysnake_copy, snakes_copy)
-
-            print(f"next moves: {next_moves}")
-
-            if (len(next_moves) == 1):
-                print(f"move {move} inconclusive, recurring")
-                return simulate_move(next_moves[0], board_copy, mysnake_copy, snakes_copy)
-            elif (len(next_moves) == 0):
-                print(f"move {move} not valid, exiting")
-                return False
             else: 
-                print(f"move {move} valid, exiting")
-                return True
+                if len(possible_moves) == 0:
+                    return False
+                if len(possible_moves) >= 2:
+                    return True
+                if len(possible_moves) == 1:
+
+                    for k in possible_moves.keys: 
+                        move(copy.deepcopy(mysnake_copy), k)
+                        return simulate_move(allsnakes_copy, itteration + 1)
 
 
-        # TODO:
-        # Fix snakes[0] issue                                 -- NOT done
-        # Implement head to head collision prediction         
-        # Allow snake to follow tail                          -- NOTE need to update everything except mysnake.head, then check moves
-        # Add food detection
 
-
-
-        #Interepert game data
-
-        turn = data.get("turn")
-        snakes = [snake(num, len(data.get("board").get("snakes")[num].get("body"))) for num in range(0, len(data.get("board").get("snakes")))]
+        Gdata = get_data()
+        allsnakes = [snake(i) for i in range(Gdata.snakes)]
 
         mine = 0
-        for i in range (len(snakes)):
+        for i in range (len(allsnakes)):
             if (data.get("board").get("snakes")[i] == data.get("you")):
                 mine = i
+                break
 
-        mysnake = snake(mine, len(data.get("you").get("body")))
-        print_snake(mysnake)
+        mysnake = allsnakes[mine]
 
-        board = [["empty" for i in range(0, data.get("board").get("width"))] for j in range(0, data.get("board").get("height"))] 
+        board = update_board(allsnakes)
+        print_board(board)
+        possible_moves = simulate_move(allsnakes, 0)
 
-        boardsize = coord(data.get("board").get("width"), data.get("board").get("height"))
+        final_moves = list(possible_moves.keys())
+        print(f"final moves: {final_moves}")
 
-        board = update_board(board, snakes, mysnake)
+        move = random.choice(final_moves)
 
-        # #TODO Flag board indicies that contain food
-
-        
-        possible_moves = ["up", "down", "right", "left"]
-
-
-
-        check_moves(possible_moves, board, mysnake, snakes)
-
-        print (f"possible moves at start: {possible_moves}")
-
-        for i in range(len(possible_moves)-1, -1 , -1):
-            if simulate_move(possible_moves[i], board, snake(mine, len(mysnake.body)), [snake(num, len(snakes[num].body)) for num in range(0, len(snakes))]) == False:
-                possible_moves.remove(possible_moves[i])
-
-        print(f"possible moves after recursion:{possible_moves}")
-
-        if (mysnake.health > 50):
-            max_idx = 0
-            priorities = [0, 0, 0, 0]
-
-            for i in range(0, len(possible_moves)):
-                if (possible_moves[i] == "left"):
-                    priorities[i] = mysnake.body[0].x
-                elif (possible_moves[i] == "right"):
-                    priorities[i] = boardsize.x - mysnake.body[0].x - 1
-                elif (possible_moves[i] == "up"):
-                    priorities[i] = mysnake.body[0].y
-                elif (possible_moves[i] == "down"):
-                    priorities[i] = boardsize.y - mysnake.body[0].y - 1
-
-            move_priority = [priority(possible_moves[i], priorities[i]) for i in range(0, len(possible_moves))]
-
-            for i in range(len(possible_moves)):
-                print(move_priority[i].move, move_priority[i].priority)
-                if (move_priority[max_idx].priority < move_priority[i].priority):
-                    max_idx = i
-
-
-            move = move_priority[max_idx].move
-            print(f"moving towards middle: {move}")
-            return{"move": move}
-        else:
-            move = random.choice(possible_moves)
-            print (f"picking random: {move}")
-            return{"move": move}
+        print(f"chose: {move}")
+        return{"move": move}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
