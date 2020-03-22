@@ -226,7 +226,7 @@ def simulate_move(allsnakes, itteration):
             allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
             move(allsnakes_copy2[mine], k)
             if simulate_move(allsnakes_copy2, itteration + 1) == False:
-                possible_moves.remove(k)
+                del possible_moves[k]
             
         max = 0
         for k in possible_moves.keys():

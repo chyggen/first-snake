@@ -31,7 +31,7 @@ class Battlesnake(object):
         # TODO: Use this function to decide how your snake is going to look on the board.
         data = cherrypy.request.json
         print("START")
-        return {"color": "#888888", "headType": "smile", "tailType": "fat-rattle"}
+        return {"color": "#02fa44", "headType": "smile", "tailType": "fat-rattle"}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
@@ -199,7 +199,6 @@ class Battlesnake(object):
 
             return moves
             
-
         def simulate_move(allsnakes, itteration):
 
             allsnakes_copy = copy.deepcopy(allsnakes)
@@ -211,21 +210,18 @@ class Battlesnake(object):
                     #Shift one turn forward
                     allsnakes_copy[s].body[p] = coord(allsnakes_copy[s].body[p-1].x, allsnakes_copy[s].body[p-1].y)
 
-            new_board = update_board(allsnakes_copy)  
-
-            print("Updated board:")
-            print_board(new_board)
+            new_board = update_board(allsnakes_copy) 
 
             possible_moves = check_moves(mysnake_copy, new_board)
             print (f"Possible moves: {possible_moves}")
 
             if itteration == 0:
-                for k in possible_moves.keys() :
+                for k in possible_moves.keys():
                     allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
                     move(allsnakes_copy2[mine], k)
                     if simulate_move(allsnakes_copy2, itteration + 1) == False:
-                        possible_moves.remove(k)
-                    
+                        del possible_moves[k]
+
                 max = 0
                 for k in possible_moves.keys():
                     if possible_moves[k] > max:
@@ -236,7 +232,6 @@ class Battlesnake(object):
                 for k in possible_moves.keys():
                     if possible_moves[k] != max:
                         del final_moves[k]
-                        
 
                 return final_moves
 
@@ -250,8 +245,6 @@ class Battlesnake(object):
                     for k in possible_moves.keys(): 
                         move(copy.deepcopy(mysnake_copy), k)
                         return simulate_move(allsnakes_copy, itteration + 1)
-
-
 
         Gdata = get_data()
         allsnakes = [snake(i) for i in range(Gdata.snakes)]
