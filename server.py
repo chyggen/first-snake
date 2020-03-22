@@ -145,11 +145,11 @@ class Battlesnake(object):
             #Remove possibility of hitting a wall or the body of a snake
             if (mysnake.body[0].x == 0 or board[mysnake.body[0].x - 1][mysnake.body[0].y][1:5] == "body"): 
                 del moves["left"]
-            elif (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
+            if (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
                 del moves["right"]
             if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
                 del moves["up"]
-            elif (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+            if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
                 del moves["down"]
 
             #Assign a score to each move based on whats in that square

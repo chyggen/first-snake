@@ -29,7 +29,7 @@ data = {
           "name": "Sneky Snek",
           "health": 90,
           "body": [
-            {"x": 6, "y": 6}, {'x': 7, 'y':6}, {'x': 8, 'y':6}, {'x': 9, 'y':6}
+            {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}
           ],
           "shout": "Hello my name is Sneky Snek"
     }
@@ -40,7 +40,7 @@ data = {
       "name": "Sneky Snek",
       "health": 90,
       "body": [
-        {"x": 6, "y": 6}, {'x': 7, 'y':6}, {'x': 8, 'y':6}, {'x': 9, 'y':6} 
+        {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8} 
           ],
       "shout": "Hello my name is Sneky Snek"
     }
@@ -141,17 +141,19 @@ def move(snake, move):
             snake.head.y += 1
 
 def check_moves(mysnake, board):
+
     moves = {"left": 0, "right": 0, "up": 0, "down": 0}
 
     #Remove possibility of hitting a wall or the body of a snake
     if (mysnake.body[0].x == 0 or board[mysnake.body[0].x - 1][mysnake.body[0].y][1:5] == "body"): 
         del moves["left"]
-    elif (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
+    if (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
         del moves["right"]
     if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
         del moves["up"]
-    elif (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+    if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
         del moves["down"]
+        
 
     #Assign a score to each move based on whats in that square
     if "left" in moves.keys():
