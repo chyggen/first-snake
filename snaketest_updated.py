@@ -2,8 +2,9 @@ import json
 import random
 import time
 import copy
+import math
 
-data ={'game': {'id': 'aec38d30-16ba-4d35-a2b7-2a1a291b3a65'}, 'turn': 61, 'board': {'height': 11, 'width': 11, 'food': [{'x': 8, 'y': 10}, {'x': 10, 'y': 6}, {'x': 1, 'y': 4}, {'x': 9, 'y': 1}], 'snakes': [{'id': 'gs_9v46vWQrSKmgBkrb3yxqbcKW', 'name': 'ChyggSnake', 'health': 39, 'body': [{'x': 9, 'y': 10}, {'x': 10, 'y': 10}, {'x': 10, 'y': 9}], 'shout': ''}, {'id': 'gs_8QMpDWFBg4BKB9CF9ywWvPqD', 'name': 'Snake Me Out Tonight', 'health': 95, 'body': [{'x': 8, 'y': 9}, {'x': 7, 'y': 9}, {'x': 7, 'y': 10}, {'x': 6, 'y': 10}, {'x': 5, 'y': 10}, {'x': 5, 'y': 9}], 'shout': ''}]}, 'you': {'id': 'gs_9v46vWQrSKmgBkrb3yxqbcKW', 'name': 'ChyggSnake', 'health': 39, 'body': [{'x': 9, 'y': 10}, {'x': 10, 'y': 10}, {'x': 10, 'y': 9}], 'shout': ''}}
+data ={'game': {'id': 'dba6eeb1-5551-4a92-8a91-219c3d17622d'}, 'turn': 122, 'board': {'height': 11, 'width': 11, 'food': [{'x': 4, 'y': 0}, {'x': 3, 'y': 9}, {'x': 5, 'y': 7}, {'x': 3, 'y': 0}, {'x': 3, 'y': 2}, {'x': 5, 'y': 6}, {'x': 1, 'y': 4}, {'x': 0, 'y': 1}, {'x': 1, 'y': 8}], 'snakes': [{'id': 'gs_VXKBVSfYpVWhKv8TBrMBrt8M', 'name': 'Nadir', 'health': 85, 'body': [{'x': 7, 'y': 9}, {'x': 7, 'y': 8}, {'x': 7, 'y': 7}, {'x': 7, 'y': 6}, {'x': 7, 'y': 5}, {'x': 7, 'y': 4}, {'x': 7, 'y': 3}, {'x': 7, 'y': 2}, {'x': 8, 'y': 2}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}, {'x': 9, 'y': 0}], 'shout': ''}, {'id': 'gs_dWKxWFQd7HbWXwby3wkcwvCH', 'name': 'ChyggSnake', 'health': 91, 'body': [{'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 1, 'y': 9}, {'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}], 'shout': ''}]}, 'you': {'id': 'gs_dWKxWFQd7HbWXwby3wkcwvCH', 'name': 'ChyggSnake', 'health': 91, 'body': [{'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 1, 'y': 9}, {'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -46,6 +47,7 @@ data ={'game': {'id': 'aec38d30-16ba-4d35-a2b7-2a1a291b3a65'}, 'turn': 61, 'boar
 #       "shout": "Hello my name is Sneky Snek"
 #     }
 #   }
+
 
 class coord:
     def __init__(self, xcoord, ycoord):
@@ -254,13 +256,17 @@ def simulate_move(allsnakes, itteration):
         if len(possible_moves) == 1:
 
             for k in possible_moves.keys(): 
-                move(copy.deepcopy(mysnake_copy), k)
+                move(mysnake_copy, k)
                 return simulate_move(allsnakes_copy, itteration + 1)
 
 
 def closest_food():
-    pass
+    head = mysnake.head
+    closest = 0
+    for i in range(len(Gdata.food)):
+        distance = abs(head.x - Gdata.food[i].x) + abs(head.y - Gdata.food[i].y)
 
+    
 
 Gdata = get_data()
 allsnakes = [snake(i) for i in range(Gdata.snakes)]

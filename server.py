@@ -3,6 +3,7 @@ import random
 import json
 import cherrypy
 import copy
+import math
 
 """
 This is a simple Battlesnake server written in Python.
@@ -31,7 +32,7 @@ class Battlesnake(object):
         # TODO: Use this function to decide how your snake is going to look on the board.
         data = cherrypy.request.json
         print("START")
-        return {"color": "#02fa44", "headType": "smile", "tailType": "fat-rattle"}
+        return {"color": "#02fa44", "headType": "smile", "tailType": "skinny"}
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
@@ -243,7 +244,7 @@ class Battlesnake(object):
                 if len(possible_moves) == 1:
 
                     for k in possible_moves.keys(): 
-                        move(copy.deepcopy(mysnake_copy), k)
+                        move(mysnake_copy, k)
                         return simulate_move(allsnakes_copy, itteration + 1)
 
         Gdata = get_data()
