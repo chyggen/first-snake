@@ -2,6 +2,7 @@ import os
 import random
 import json
 import cherrypy
+import copy
 
 """
 This is a simple Battlesnake server written in Python.
