@@ -3,7 +3,7 @@ import random
 import time
 import copy
 
-data ={'game': {'id': 'ea30a511-b552-4293-85c1-30b0ec47771b'}, 'turn': 93, 'board': {'height': 11, 'width': 11, 'food': [{'x': 0, 'y': 10}, {'x': 5, 'y': 8}], 'snakes': [{'id': 'gs_4Dr3qbqkhD36VGbpWX6R8FHb', 'name': 'ChyggSnake', 'health': 50, 'body': [{'x': 1, 'y': 10}, {'x': 1, 'y': 9}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}, {'x': 3, 'y': 8}], 'shout': ''}, {'id': 'gs_HF9tqCpcycvSqRYQxgDdpxJM', 'name': 'SooperTrooper', 'health': 91, 'body': [{'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}, {'x': 0, 'y': 5}, {'x': 0, 'y': 4}, {'x': 0, 'y': 3}, {'x': 0, 'y': 2}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 1, 'y': 3}, {'x': 2, 'y': 3}, {'x': 3, 'y': 3}, {'x': 4, 'y': 3}], 'shout': ''}]}, 'you': {'id': 'gs_4Dr3qbqkhD36VGbpWX6R8FHb', 'name': 'ChyggSnake', 'health': 50, 'body': [{'x': 1, 'y': 10}, {'x': 1, 'y': 9}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}, {'x': 3, 'y': 8}], 'shout': ''}}
+data ={'game': {'id': 'aec38d30-16ba-4d35-a2b7-2a1a291b3a65'}, 'turn': 61, 'board': {'height': 11, 'width': 11, 'food': [{'x': 8, 'y': 10}, {'x': 10, 'y': 6}, {'x': 1, 'y': 4}, {'x': 9, 'y': 1}], 'snakes': [{'id': 'gs_9v46vWQrSKmgBkrb3yxqbcKW', 'name': 'ChyggSnake', 'health': 39, 'body': [{'x': 9, 'y': 10}, {'x': 10, 'y': 10}, {'x': 10, 'y': 9}], 'shout': ''}, {'id': 'gs_8QMpDWFBg4BKB9CF9ywWvPqD', 'name': 'Snake Me Out Tonight', 'health': 95, 'body': [{'x': 8, 'y': 9}, {'x': 7, 'y': 9}, {'x': 7, 'y': 10}, {'x': 6, 'y': 10}, {'x': 5, 'y': 10}, {'x': 5, 'y': 9}], 'shout': ''}]}, 'you': {'id': 'gs_9v46vWQrSKmgBkrb3yxqbcKW', 'name': 'ChyggSnake', 'health': 39, 'body': [{'x': 9, 'y': 10}, {'x': 10, 'y': 10}, {'x': 10, 'y': 9}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -149,13 +149,13 @@ def check_moves(mysnake, board):
     moves = {"left": 0, "right": 0, "up": 0, "down": 0}
 
     #Remove possibility of hitting a wall or the body of a snake
-    if (mysnake.body[0].x == 0 or board[mysnake.body[0].x - 1][mysnake.body[0].y][1:5] == "body"): 
+    if (mysnake.body[0].x == 0 or board[mysnake.body[0].x - 1][mysnake.body[0].y][1:5] in {"body", "head"}): 
         del moves["left"]
-    if (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] == "body"):
+    if (mysnake.body[0].x == Gdata.boardsize.x - 1 or board[mysnake.body[0].x + 1][mysnake.body[0].y][1:5] in {"body", "head"}):
         del moves["right"]
-    if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+    if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] in {"body", "head"}):
         del moves["up"]
-    if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y + 1][1:5] == "body"):
+    if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y + 1][1:5] in {"body", "head"}):
         del moves["down"]
         
 
