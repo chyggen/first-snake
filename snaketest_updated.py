@@ -3,48 +3,49 @@ import random
 import time
 import copy
 
-data = {
-    "game": {
-      "id": "game-id-string"
-    },
-    "turn": 4,
-    "board": {
-      "height": 11,
-      "width": 11,
-      "food": [
-        {'x': 3, 'y': 8}
-      ],
-      "snakes": [
-        {
-          "id": "snake-id-string",
-          "name": "Sneky Snek",
-          "health": 90,
-          "body": [
-            {'x': 4, 'y': 6}, {"x": 4, "y": 5}, {'x': 4, 'y':4}
-          ],
-          "shout": "Hello my name is Sneky Snek"
-        },
-        {
-          "id": "snake-id-string",
-          "name": "Sneky Snek",
-          "health": 90,
-          "body": [
-            {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}
-          ],
-          "shout": "Hello my name is Sneky Snek"
-    }
-      ]
-    },
-    "you": {
-      "id": "snake-id-string",
-      "name": "Sneky Snek",
-      "health": 90,
-      "body": [
-        {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8} 
-          ],
-      "shout": "Hello my name is Sneky Snek"
-    }
-  }
+data = {'game': {'id': '547332f0-000e-4a7c-87f3-c38476e744e3'}, 'turn': 92, 'board': {'height': 11, 'width': 11, 'food': [{'x': 1, 'y': 5}, {'x': 0, 'y': 4}, {'x': 10, 'y': 10}, {'x': 3, 'y': 0}, {'x': 1, 'y': 2}, {'x': 5, 'y': 3}, {'x': 7, 'y': 3}, {'x': 1, 'y': 9}, {'x': 5, 'y': 8}, {'x': 10, 'y': 2}], 'snakes': [{'id': 'gs_rtj7JDw4rDPPSDp6vtXQCQ4M', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 0, 'y': 0}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 2, 'y': 1}, {'x': 3, 'y': 1}, {'x': 4, 'y': 1}, {'x': 4, 'y': 0}], 'shout': ''}]}, 'you': {'id': 'gs_rtj7JDw4rDPPSDp6vtXQCQ4M', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 0, 'y': 0}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 2, 'y': 1}, {'x': 3, 'y': 1}, {'x': 4, 'y': 1}, {'x': 4, 'y': 0}], 'shout': ''}}
+#     {
+#     "game": {
+#       "id": "game-id-string"
+#     },
+#     "turn": 4,
+#     "board": {
+#       "height": 11,
+#       "width": 11,
+#       "food": [
+#         {'x': 3, 'y': 8}
+#       ],
+#       "snakes": [
+#         {
+#           "id": "snake-id-string",
+#           "name": "Sneky Snek",
+#           "health": 90,
+#           "body": [
+#             {'x': 4, 'y': 6}, {"x": 4, "y": 5}, {'x': 4, 'y':4}
+#           ],
+#           "shout": "Hello my name is Sneky Snek"
+#         },
+#         {
+#           "id": "snake-id-string",
+#           "name": "Sneky Snek",
+#           "health": 90,
+#           "body": [
+#             {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}
+#           ],
+#           "shout": "Hello my name is Sneky Snek"
+#     }
+#       ]
+#     },
+#     "you": {
+#       "id": "snake-id-string",
+#       "name": "Sneky Snek",
+#       "health": 90,
+#       "body": [
+#         {'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8} 
+#           ],
+#       "shout": "Hello my name is Sneky Snek"
+#     }
+#   }
 
 class coord:
     def __init__(self, xcoord, ycoord):
@@ -134,14 +135,14 @@ def print_snake(snake):
         print(f"x : {snake.body[i].x}, y : {snake.body[i].y} ")
 
 def move(snake, move):
-        if move == "left":
-            snake.head.x -= 1
-        if move == "right":
-            snake.head.x += 1
-        if move == "up":
-            snake.head.y -= 1
-        if move == "down":
-            snake.head.y += 1
+    if move == "left":
+        snake.head.x -= 1
+    if move == "right":
+        snake.head.x += 1
+    if move == "up":
+        snake.head.y -= 1
+    if move == "down":
+        snake.head.y += 1
 
 def check_moves(mysnake, board):
 
@@ -222,7 +223,9 @@ def simulate_move(allsnakes, itteration):
     print (f"Possible moves: {possible_moves}")
 
     if itteration == 0:
-        for k in possible_moves.keys() :
+
+
+        for k in copy.deepcopy(possible_moves).keys() :
             allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
             move(allsnakes_copy2[mine], k)
             if simulate_move(allsnakes_copy2, itteration + 1) == False:
