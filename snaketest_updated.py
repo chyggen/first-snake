@@ -3,7 +3,7 @@ import random
 import time
 import copy
 
-data ={'game': {'id': 'e7d4abee-bbab-4589-8bb0-1bf0b5b1a340'}, 'turn': 74, 'board': {'height': 11, 'width': 11, 'food': [{'x': 5, 'y': 6}, {'x': 6, 'y': 6}, {'x': 10, 'y': 10}, {'x': 7, 'y': 4}, {'x': 0, 'y': 8}, {'x': 2, 'y': 4}, {'x': 0, 'y': 7}, {'x': 0, 'y': 10}, {'x': 3, 'y': 5}, {'x': 6, 'y': 4}], 'snakes': [{'id': 'gs_wPKpCDDrQBTC6XTVPyJR4PBK', 'name': 'ChyggSnake', 'health': 82, 'body': [{'x': 10, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}], 'shout': ''}]}, 'you': {'id': 'gs_wPKpCDDrQBTC6XTVPyJR4PBK', 'name': 'ChyggSnake', 'health': 82, 'body': [{'x': 10, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}], 'shout': ''}}
+data ={'game': {'id': 'ea30a511-b552-4293-85c1-30b0ec47771b'}, 'turn': 93, 'board': {'height': 11, 'width': 11, 'food': [{'x': 0, 'y': 10}, {'x': 5, 'y': 8}], 'snakes': [{'id': 'gs_4Dr3qbqkhD36VGbpWX6R8FHb', 'name': 'ChyggSnake', 'health': 50, 'body': [{'x': 1, 'y': 10}, {'x': 1, 'y': 9}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}, {'x': 3, 'y': 8}], 'shout': ''}, {'id': 'gs_HF9tqCpcycvSqRYQxgDdpxJM', 'name': 'SooperTrooper', 'health': 91, 'body': [{'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}, {'x': 0, 'y': 5}, {'x': 0, 'y': 4}, {'x': 0, 'y': 3}, {'x': 0, 'y': 2}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 1, 'y': 3}, {'x': 2, 'y': 3}, {'x': 3, 'y': 3}, {'x': 4, 'y': 3}], 'shout': ''}]}, 'you': {'id': 'gs_4Dr3qbqkhD36VGbpWX6R8FHb', 'name': 'ChyggSnake', 'health': 50, 'body': [{'x': 1, 'y': 10}, {'x': 1, 'y': 9}, {'x': 2, 'y': 9}, {'x': 2, 'y': 8}, {'x': 3, 'y': 8}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -105,16 +105,16 @@ def update_board(allsnakes):
         if (i != mine):
             head = coord(allsnakes[i].head.x, allsnakes[i].head.y)
             if head.x != Gdata.boardsize.x - 1:
-                if updated_board[head.x + 1][head.y] in {"empty", "food"}:
+                if updated_board[head.x + 1][head.y] in {"empty", "food "}:
                     updated_board[head.x + 1][head.y] = f"{i}next"
             if head.x != 0:
-                if updated_board[head.x - 1][head.y] in {"empty", "food"}:
+                if updated_board[head.x - 1][head.y] in {"empty", "food "}:
                     updated_board[head.x - 1][head.y] = f"{i}next"
             if head.y != Gdata.boardsize.y - 1:
-                if updated_board[head.x][head.y + 1] in {"empty", "food"}:
+                if updated_board[head.x][head.y + 1] in {"empty", "food "}:
                     updated_board[head.x][head.y + 1] = f"{i}next"
             if head.y != 0:
-                if updated_board[head.x][head.y - 1] in {"empty", "food"}:
+                if updated_board[head.x][head.y - 1] in {"empty", "food "}:
                     updated_board[head.x][head.y - 1] = f"{i}next"
         
     return updated_board
@@ -258,6 +258,9 @@ def simulate_move(allsnakes, itteration):
                 return simulate_move(allsnakes_copy, itteration + 1)
 
 
+def closest_food():
+    pass
+
 
 Gdata = get_data()
 allsnakes = [snake(i) for i in range(Gdata.snakes)]
@@ -276,6 +279,11 @@ possible_moves = simulate_move(allsnakes, 0)
 
 final_moves = list(possible_moves.keys())
 print(f"final moves: {final_moves}")
+
+target = closest_food()
+for i in range(len(Gdata.food)):
+    pass
+
 
 move = random.choice(final_moves)
 
