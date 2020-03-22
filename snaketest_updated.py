@@ -3,7 +3,7 @@ import random
 import time
 import copy
 
-data = {'game': {'id': '547332f0-000e-4a7c-87f3-c38476e744e3'}, 'turn': 92, 'board': {'height': 11, 'width': 11, 'food': [{'x': 1, 'y': 5}, {'x': 0, 'y': 4}, {'x': 10, 'y': 10}, {'x': 3, 'y': 0}, {'x': 1, 'y': 2}, {'x': 5, 'y': 3}, {'x': 7, 'y': 3}, {'x': 1, 'y': 9}, {'x': 5, 'y': 8}, {'x': 10, 'y': 2}], 'snakes': [{'id': 'gs_rtj7JDw4rDPPSDp6vtXQCQ4M', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 0, 'y': 0}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 2, 'y': 1}, {'x': 3, 'y': 1}, {'x': 4, 'y': 1}, {'x': 4, 'y': 0}], 'shout': ''}]}, 'you': {'id': 'gs_rtj7JDw4rDPPSDp6vtXQCQ4M', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 0, 'y': 0}, {'x': 0, 'y': 1}, {'x': 1, 'y': 1}, {'x': 2, 'y': 1}, {'x': 3, 'y': 1}, {'x': 4, 'y': 1}, {'x': 4, 'y': 0}], 'shout': ''}}
+data ={'game': {'id': 'e7d4abee-bbab-4589-8bb0-1bf0b5b1a340'}, 'turn': 74, 'board': {'height': 11, 'width': 11, 'food': [{'x': 5, 'y': 6}, {'x': 6, 'y': 6}, {'x': 10, 'y': 10}, {'x': 7, 'y': 4}, {'x': 0, 'y': 8}, {'x': 2, 'y': 4}, {'x': 0, 'y': 7}, {'x': 0, 'y': 10}, {'x': 3, 'y': 5}, {'x': 6, 'y': 4}], 'snakes': [{'id': 'gs_wPKpCDDrQBTC6XTVPyJR4PBK', 'name': 'ChyggSnake', 'health': 82, 'body': [{'x': 10, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}], 'shout': ''}]}, 'you': {'id': 'gs_wPKpCDDrQBTC6XTVPyJR4PBK', 'name': 'ChyggSnake', 'health': 82, 'body': [{'x': 10, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -155,7 +155,7 @@ def check_moves(mysnake, board):
         del moves["right"]
     if (mysnake.body[0].y == 0 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
         del moves["up"]
-    if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y - 1][1:5] == "body"):
+    if (mysnake.body[0].y == Gdata.boardsize.y - 1 or board[mysnake.body[0].x][mysnake.body[0].y + 1][1:5] == "body"):
         del moves["down"]
         
 
@@ -200,6 +200,8 @@ def check_moves(mysnake, board):
             else:
                 moves["down"] = 1
 
+
+    print(f"moves priority:{moves}")
     return moves
     
 
@@ -223,7 +225,6 @@ def simulate_move(allsnakes, itteration):
     print (f"Possible moves: {possible_moves}")
 
     if itteration == 0:
-
 
         for k in copy.deepcopy(possible_moves).keys() :
             allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
