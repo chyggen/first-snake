@@ -44,7 +44,7 @@ class Battlesnake(object):
         print("current turn:")
         print(data)
 
-                class coord:
+        class coord:
             def __init__(self, xcoord, ycoord):
                 self.x = xcoord
                 self.y = ycoord
@@ -269,6 +269,7 @@ class Battlesnake(object):
         move = random.choice(final_moves)
 
         print(f"chose: {move}")
+
         return{"move": move}
 
     @cherrypy.expose
