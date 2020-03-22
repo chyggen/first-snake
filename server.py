@@ -216,7 +216,7 @@ class Battlesnake(object):
             print (f"Possible moves: {possible_moves}")
 
             if itteration == 0:
-                for k in possible_moves.keys():
+                for k in copy.deepcopy(possible_moves).keys():
                     allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
                     move(allsnakes_copy2[mine], k)
                     if simulate_move(allsnakes_copy2, itteration + 1) == False:
