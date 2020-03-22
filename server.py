@@ -103,14 +103,18 @@ class Battlesnake(object):
                 if (i != mine):
                     head = coord(allsnakes[i].head.x, allsnakes[i].head.y)
 
-                    if (updated_board[head.x + 1][head.y] in {"empty", "food"}) and head.x != Gdata.boardsize.x - 1:
-                        updated_board[head.x + 1][head.y] = f"{i}next"
-                    if (updated_board[head.x - 1][head.y] in {"empty", "food"}) and head.x != 0:
-                        updated_board[head.x - 1][head.y] = f"{i}next"
-                    if (updated_board[head.x][head.y + 1] in {"empty", "food"}) and head.y != Gdata.boardsize.y - 1:
-                        updated_board[head.x][head.y + 1] = f"{i}next"
-                    if (updated_board[head.x][head.y - 1] in {"empty", "food"}) and head.y != 0:
-                        updated_board[head.x][head.y - 1] = f"{i}next"
+                    if head.x != Gdata.boardsize.x - 1:
+                        if updated_board[head.x + 1][head.y] in {"empty", "food"}:
+                            updated_board[head.x + 1][head.y] = f"{i}next"
+                    if head.x != 0:
+                        if updated_board[head.x - 1][head.y] in {"empty", "food"}:
+                            updated_board[head.x - 1][head.y] = f"{i}next"
+                    if head.y != Gdata.boardsize.y - 1:
+                        if updated_board[head.x][head.y + 1] in {"empty", "food"}:
+                            updated_board[head.x][head.y + 1] = f"{i}next"
+                    if head.y != 0:
+                        if updated_board[head.x][head.y - 1] in {"empty", "food"}:
+                            updated_board[head.x][head.y - 1] = f"{i}next"
                 
             return updated_board
 
