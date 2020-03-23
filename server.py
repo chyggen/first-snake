@@ -304,7 +304,7 @@ class Battlesnake(object):
         if mysnake.size <= max([allsnakes[i].size for i in range (Gdata.snakes)]):
             print("getting food")
             target = closest_food()
-            final_moves = move_to_target(final_moves, target)a
+            final_moves = move_to_target(final_moves, target)
         else: print("big enough, not getting food")
 
         move = random.choice(final_moves)
