@@ -4,7 +4,7 @@ import time
 import copy
 import math
 
-data ={'game': {'id': 'dd6b17db-2e85-4298-b077-9dc334df758a'}, 'turn': 2, 'board': {'height': 11, 'width': 11, 'food': [{'x': 3, 'y': 9}, {'x': 0, 'y': 2}, {'x': 1, 'y': 10}, {'x': 7, 'y': 4}], 'snakes': [{'id': 'gs_gxhbmybdV4CtgY87ky8J9hm3', 'name': 'Snake 1', 'health': 98, 'body': [{'x': 8, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}], 'shout': '5% ready'}, {'id': 'gs_HqdRvjhhktmHBFcFX8c4Q474', 'name': 'Dolt', 'health': 98, 'body': [{'x': 1, 'y': 3}, {'x': 1, 'y': 4}, {'x': 1, 'y': 5}], 'shout': 'Boo!'}, {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}, {'id': 'gs_d3JSVkPvGrfHPd7hgvGdfcQ6', 'name': 'SooperTrooper', 'health': 98, 'body': [{'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 9, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}}
+data ={'game': {'id': 'dd6b17db-2e85-4298-b077-9dc334df758a'}, 'turn': 2, 'board': {'height': 11, 'width': 11, 'food': [{'x': 3, 'y': 9}, {'x': 0, 'y': 2}, {'x': 1, 'y': 10}, {'x': 7, 'y': 4}, {'x': 0, 'y': 0}], 'snakes': [{'id': 'gs_gxhbmybdV4CtgY87ky8J9hm3', 'name': 'Snake 1', 'health': 98, 'body': [{'x': 8, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}], 'shout': '5% ready'}, {'id': 'gs_HqdRvjhhktmHBFcFX8c4Q474', 'name': 'Dolt', 'health': 98, 'body': [{'x': 1, 'y': 3}, {'x': 1, 'y': 4}, {'x': 1, 'y': 5}], 'shout': 'Boo!'}, {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}, {'id': 'gs_d3JSVkPvGrfHPd7hgvGdfcQ6', 'name': 'SooperTrooper', 'health': 98, 'body': [{'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 9, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -83,11 +83,16 @@ def empty_board():
 def update_board(allsnakes):
     updated_board = empty_board()
 
-    
+    #Add board edges
+    for i in range(Gdata.boardsize.x):
+        for j in range(Gdata.boardsize.y):
+            if i == 0 or j == 0 or i == Gdata.boardsize.x - 1 or j == Gdata.boardsize.y - 1:
+                updated_board[i][j] = "edge "
 
-    #Add food to board
+    #Add food to board (but not if the food is in one of the corners)
     for i in range(len(Gdata.food)):
-        updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
+        if not (Gdata.food[i].x in {0, Gdata.boardsize.x -1} and Gdata.food[i].y in {0, Gdata.boardsize.y -1}):
+            updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
 
     #Add snakes to board
     for i in range(Gdata.snakes):
@@ -109,16 +114,16 @@ def update_board(allsnakes):
         if (i != mine):
             head = coord(allsnakes[i].head.x, allsnakes[i].head.y)
             if head.x != Gdata.boardsize.x - 1:
-                if updated_board[head.x + 1][head.y] in {"empty", "food "}:
+                if updated_board[head.x + 1][head.y] in {"empty", "food ", "edge "}:
                     updated_board[head.x + 1][head.y] = f"{i}next"
             if head.x != 0:
-                if updated_board[head.x - 1][head.y] in {"empty", "food "}:
+                if updated_board[head.x - 1][head.y] in {"empty", "food ", "edge "}:
                     updated_board[head.x - 1][head.y] = f"{i}next"
             if head.y != Gdata.boardsize.y - 1:
-                if updated_board[head.x][head.y + 1] in {"empty", "food "}:
+                if updated_board[head.x][head.y + 1] in {"empty", "food ", "edge "}:
                     updated_board[head.x][head.y + 1] = f"{i}next"
             if head.y != 0:
-                if updated_board[head.x][head.y - 1] in {"empty", "food "}:
+                if updated_board[head.x][head.y - 1] in {"empty", "food ", "edge "}:
                     updated_board[head.x][head.y - 1] = f"{i}next"
         
     return updated_board
@@ -169,40 +174,48 @@ def check_moves(mysnake, board):
     if "left" in moves.keys():
         square = board[mysnake.body[0].x - 1][mysnake.body[0].y]
         if square in {"empty", "food "}:
+            moves["left"] = 3
+        elif square == "edge ":
             moves["left"] = 2
         elif square[1:5] == "next":
             if mysnake.size > allsnakes[int(square[0])].size:
-                moves["left"] = 3
+                moves["left"] = 4
             else:
                 moves["left"] = 1
 
     if "right" in moves.keys():
         square = board[mysnake.body[0].x + 1][mysnake.body[0].y]
         if square in {"empty", "food "}:
+            moves["right"] = 3
+        elif square == "edge ":
             moves["right"] = 2
         elif square[1:5] == "next":
             if mysnake.size > allsnakes[int(square[0])].size:
-                moves["right"] = 3
+                moves["right"] = 4
             else:
                 moves["right"] = 1
 
     if "up" in moves.keys():
         square = board[mysnake.body[0].x][mysnake.body[0].y - 1]
         if square in {"empty", "food "}:
+            moves["up"] = 3
+        elif square == "edge ":
             moves["up"] = 2
         elif square[1:5] == "next":
             if mysnake.size > allsnakes[int(square[0])].size:
-                moves["up"] = 3
+                moves["up"] = 4
             else:
                 moves["up"] = 1
 
     if "down" in moves.keys():
         square = board[mysnake.body[0].x][mysnake.body[0].y + 1]
         if square in {"empty", "food "}:
+            moves["down"] = 3
+        elif square == "edge ":
             moves["down"] = 2
         elif square[1:5] == "next":
             if mysnake.size > allsnakes[int(square[0])].size:
-                moves["down"] = 3
+                moves["down"] = 4
             else:
                 moves["down"] = 1
 
@@ -339,5 +352,3 @@ final_moves = move_to_target(final_moves, target)
 move = random.choice(final_moves)
 
 print(f"chose: {move}")
-
-

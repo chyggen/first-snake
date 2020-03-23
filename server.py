@@ -86,9 +86,10 @@ class Battlesnake(object):
                     if i == 0 or j == 0 or i == Gdata.boardsize.x - 1 or j == Gdata.boardsize.y - 1:
                         updated_board[i][j] = "edge "
                         
-            #Add food to board
+            #Add food to board (but not if the food is in one of the corners)
             for i in range(len(Gdata.food)):
-                updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
+                if not (Gdata.food[i].x in {0, Gdata.boardsize.x -1} and Gdata.food[i].y in {0, Gdata.boardsize.y -1}):
+                    updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
 
             #Add snakes to board
             for i in range(Gdata.snakes):
