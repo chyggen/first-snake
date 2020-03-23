@@ -247,6 +247,41 @@ class Battlesnake(object):
                         move(mysnake_copy, k)
                         return simulate_move(allsnakes_copy, itteration + 1)
 
+        def closest_food():
+            head = mysnake.head
+            closest = coord((Gdata.boardsize.x - 1)/2, (Gdata.boardsize.y - 1)/2)
+            min_dist = 20
+            for i in range(len(Gdata.food)):
+                distance = abs(head.x - Gdata.food[i].x) + abs(head.y - Gdata.food[i].y)
+
+                if distance < min_dist:
+                    min_dist = distance
+                    closest = coord(Gdata.food[i].x, Gdata.food[i].y)
+
+            #print(f"closest food is {min_dist} units away at x = {closest.x}, y = {closest.y}")
+            return closest
+
+        def move_to_target(moves, target):
+
+            if len(moves) < 2:
+                return moves
+            
+            x_dif = target.x - mysnake.head.x
+            y_dif = target.y - mysnake.head.y
+
+            if abs(x_dif) > abs(y_dif):
+                if x_dif > 0 and "right" in moves:
+                    return ["right"]
+                if x_dif < 0 and "left" in moves:
+                    return ["left"]
+            else:
+                if y_dif > 0 and "down" in moves:
+                    return ["down"]
+                if y_dif < 0 and "up" in moves:
+                    return ["up"]
+
+            return moves
+
         Gdata = get_data()
         allsnakes = [snake(i) for i in range(Gdata.snakes)]
 
@@ -264,6 +299,9 @@ class Battlesnake(object):
 
         final_moves = list(possible_moves.keys())
         print(f"final moves: {final_moves}")
+
+        target = closest_food()
+        final_moves = move_to_target(final_moves, target)
 
         move = random.choice(final_moves)
 

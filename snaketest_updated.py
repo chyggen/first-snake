@@ -4,7 +4,7 @@ import time
 import copy
 import math
 
-data ={'game': {'id': 'dba6eeb1-5551-4a92-8a91-219c3d17622d'}, 'turn': 122, 'board': {'height': 11, 'width': 11, 'food': [{'x': 4, 'y': 0}, {'x': 3, 'y': 9}, {'x': 5, 'y': 7}, {'x': 3, 'y': 0}, {'x': 3, 'y': 2}, {'x': 5, 'y': 6}, {'x': 1, 'y': 4}, {'x': 0, 'y': 1}, {'x': 1, 'y': 8}], 'snakes': [{'id': 'gs_VXKBVSfYpVWhKv8TBrMBrt8M', 'name': 'Nadir', 'health': 85, 'body': [{'x': 7, 'y': 9}, {'x': 7, 'y': 8}, {'x': 7, 'y': 7}, {'x': 7, 'y': 6}, {'x': 7, 'y': 5}, {'x': 7, 'y': 4}, {'x': 7, 'y': 3}, {'x': 7, 'y': 2}, {'x': 8, 'y': 2}, {'x': 8, 'y': 1}, {'x': 8, 'y': 0}, {'x': 9, 'y': 0}], 'shout': ''}, {'id': 'gs_dWKxWFQd7HbWXwby3wkcwvCH', 'name': 'ChyggSnake', 'health': 91, 'body': [{'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 1, 'y': 9}, {'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}], 'shout': ''}]}, 'you': {'id': 'gs_dWKxWFQd7HbWXwby3wkcwvCH', 'name': 'ChyggSnake', 'health': 91, 'body': [{'x': 2, 'y': 10}, {'x': 2, 'y': 9}, {'x': 1, 'y': 9}, {'x': 0, 'y': 9}, {'x': 0, 'y': 8}, {'x': 0, 'y': 7}, {'x': 0, 'y': 6}], 'shout': ''}}
+data ={'game': {'id': 'dd6b17db-2e85-4298-b077-9dc334df758a'}, 'turn': 2, 'board': {'height': 11, 'width': 11, 'food': [{'x': 3, 'y': 9}, {'x': 0, 'y': 2}, {'x': 1, 'y': 10}, {'x': 7, 'y': 4}], 'snakes': [{'id': 'gs_gxhbmybdV4CtgY87ky8J9hm3', 'name': 'Snake 1', 'health': 98, 'body': [{'x': 8, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}], 'shout': '5% ready'}, {'id': 'gs_HqdRvjhhktmHBFcFX8c4Q474', 'name': 'Dolt', 'health': 98, 'body': [{'x': 1, 'y': 3}, {'x': 1, 'y': 4}, {'x': 1, 'y': 5}], 'shout': 'Boo!'}, {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}], 'shout': ''}, {'id': 'gs_d3JSVkPvGrfHPd7hgvGdfcQ6', 'name': 'SooperTrooper', 'health': 98, 'body': [{'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 9, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -136,6 +136,7 @@ def print_snake(snake):
     for i in range(len(snake.body)):
         print(f"x : {snake.body[i].x}, y : {snake.body[i].y} ")
 
+
 def move(snake, move):
     if move == "left":
         snake.head.x -= 1
@@ -145,6 +146,7 @@ def move(snake, move):
         snake.head.y -= 1
     if move == "down":
         snake.head.y += 1
+
 
 def check_moves(mysnake, board):
 
@@ -262,9 +264,38 @@ def simulate_move(allsnakes, itteration):
 
 def closest_food():
     head = mysnake.head
-    closest = 0
+    closest = coord((Gdata.boardsize.x - 1)/2, (Gdata.boardsize.y - 1)/2)
+    min_dist = 20
     for i in range(len(Gdata.food)):
         distance = abs(head.x - Gdata.food[i].x) + abs(head.y - Gdata.food[i].y)
+
+        if distance < min_dist:
+            min_dist = distance
+            closest = coord(Gdata.food[i].x, Gdata.food[i].y)
+
+    #print(f"closest food is {min_dist} units away at x = {closest.x}, y = {closest.y}")
+    return closest
+
+def move_to_target(moves, target):
+
+    if len(moves) < 2:
+        return moves
+    
+    x_dif = target.x - mysnake.head.x
+    y_dif = target.y - mysnake.head.y
+
+    if abs(x_dif) > abs(y_dif):
+        if x_dif > 0 and "right" in moves:
+            return ["right"]
+        if x_dif < 0 and "left" in moves:
+            return ["left"]
+    else:
+        if y_dif > 0 and "down" in moves:
+            return ["down"]
+        if y_dif < 0 and "up" in moves:
+            return ["up"]
+
+    return moves
 
     
 
@@ -287,9 +318,7 @@ final_moves = list(possible_moves.keys())
 print(f"final moves: {final_moves}")
 
 target = closest_food()
-for i in range(len(Gdata.food)):
-    pass
-
+final_moves = move_to_target(final_moves, target)
 
 move = random.choice(final_moves)
 
