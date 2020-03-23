@@ -83,6 +83,8 @@ def empty_board():
 def update_board(allsnakes):
     updated_board = empty_board()
 
+    
+
     #Add food to board
     for i in range(len(Gdata.food)):
         updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "

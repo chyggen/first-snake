@@ -80,6 +80,12 @@ class Battlesnake(object):
         def update_board(allsnakes):
             updated_board = empty_board()
 
+            #Add board edges
+            for i in range(Gdata.boardsize.x):
+                for j in range(Gdata.boardsize.y):
+                    if i == 0 or j == 0 or i == Gdata.boardsize.x - 1 or j == Gdata.boardsize.y - 1:
+                        updated_board[i][j] = "edge "
+                        
             #Add food to board
             for i in range(len(Gdata.food)):
                 updated_board[Gdata.food[i].x][Gdata.food[i].y] = "food "
@@ -158,43 +164,52 @@ class Battlesnake(object):
                 del moves["down"]
 
             #Assign a score to each move based on whats in that square
+                
             if "left" in moves.keys():
                 square = board[mysnake.body[0].x - 1][mysnake.body[0].y]
                 if square in {"empty", "food "}:
+                    moves["left"] = 3
+                elif square == "edge ":
                     moves["left"] = 2
                 elif square[1:5] == "next":
                     if mysnake.size > allsnakes[int(square[0])].size:
-                        moves["left"] = 3
+                        moves["left"] = 4
                     else:
                         moves["left"] = 1
 
             if "right" in moves.keys():
                 square = board[mysnake.body[0].x + 1][mysnake.body[0].y]
                 if square in {"empty", "food "}:
+                    moves["right"] = 3
+                elif square == "edge ":
                     moves["right"] = 2
                 elif square[1:5] == "next":
                     if mysnake.size > allsnakes[int(square[0])].size:
-                        moves["right"] = 3
+                        moves["right"] = 4
                     else:
                         moves["right"] = 1
 
             if "up" in moves.keys():
                 square = board[mysnake.body[0].x][mysnake.body[0].y - 1]
                 if square in {"empty", "food "}:
+                    moves["up"] = 3
+                elif square == "edge ":
                     moves["up"] = 2
                 elif square[1:5] == "next":
                     if mysnake.size > allsnakes[int(square[0])].size:
-                        moves["up"] = 3
+                        moves["up"] = 4
                     else:
                         moves["up"] = 1
 
             if "down" in moves.keys():
                 square = board[mysnake.body[0].x][mysnake.body[0].y + 1]
                 if square in {"empty", "food "}:
+                    moves["down"] = 3
+                elif square == "edge ":
                     moves["down"] = 2
                 elif square[1:5] == "next":
                     if mysnake.size > allsnakes[int(square[0])].size:
-                        moves["down"] = 3
+                        moves["down"] = 4
                     else:
                         moves["down"] = 1
 
