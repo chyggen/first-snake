@@ -4,7 +4,7 @@ import time
 import copy
 import math
 
-data ={'game': {'id': 'dd6b17db-2e85-4298-b077-9dc334df758a'}, 'turn': 2, 'board': {'height': 11, 'width': 11, 'food': [{'x': 3, 'y': 9}, {'x': 0, 'y': 2}, {'x': 1, 'y': 10}, {'x': 7, 'y': 4}], 'snakes': [{'id': 'gs_gxhbmybdV4CtgY87ky8J9hm3', 'name': 'Snake 1', 'health': 98, 'body': [{'x': 8, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}], 'shout': '5% ready'}, {'id': 'gs_HqdRvjhhktmHBFcFX8c4Q474', 'name': 'Dolt', 'health': 98, 'body': [{'x': 1, 'y': 3}, {'x': 1, 'y': 4}, {'x': 1, 'y': 5}], 'shout': 'Boo!'}, {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}], 'shout': ''}, {'id': 'gs_d3JSVkPvGrfHPd7hgvGdfcQ6', 'name': 'SooperTrooper', 'health': 98, 'body': [{'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 9, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}], 'shout': ''}}
+data ={'game': {'id': 'dd6b17db-2e85-4298-b077-9dc334df758a'}, 'turn': 2, 'board': {'height': 11, 'width': 11, 'food': [{'x': 3, 'y': 9}, {'x': 0, 'y': 2}, {'x': 1, 'y': 10}, {'x': 7, 'y': 4}], 'snakes': [{'id': 'gs_gxhbmybdV4CtgY87ky8J9hm3', 'name': 'Snake 1', 'health': 98, 'body': [{'x': 8, 'y': 0}, {'x': 9, 'y': 0}, {'x': 9, 'y': 1}], 'shout': '5% ready'}, {'id': 'gs_HqdRvjhhktmHBFcFX8c4Q474', 'name': 'Dolt', 'health': 98, 'body': [{'x': 1, 'y': 3}, {'x': 1, 'y': 4}, {'x': 1, 'y': 5}], 'shout': 'Boo!'}, {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}, {'id': 'gs_d3JSVkPvGrfHPd7hgvGdfcQ6', 'name': 'SooperTrooper', 'health': 98, 'body': [{'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 9, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_Y48qDX6CWJgxdCbbPC7gSCpT', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 2, 'y': 2}, {'x': 2, 'y': 1}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -317,7 +317,12 @@ possible_moves = simulate_move(allsnakes, 0)
 final_moves = list(possible_moves.keys())
 print(f"final moves: {final_moves}")
 
-if mysnake.size <= max([allsnakes[i].size for i in range (Gdata.snakes)]):
+max_size = 3
+for i in range(Gdata.snakes):
+    if i != mine and max_size < allsnakes[i].size:
+        max_size = allsnakes[i].size
+
+if mysnake.size <= max_size:
     print("getting food")
     target = closest_food()
     final_moves = move_to_target(final_moves, target)

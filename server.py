@@ -301,7 +301,14 @@ class Battlesnake(object):
         final_moves = list(possible_moves.keys())
         print(f"final moves: {final_moves}")
 
-        if mysnake.size <= max([allsnakes[i].size for i in range (Gdata.snakes)]):
+
+        max_size = 3
+        for i in range(Gdata.snakes):
+            if i != mine and max_size < allsnakes[i].size:
+                max_size = allsnakes[i].size
+
+
+        if mysnake.size <= max_size:
             print("getting food")
             target = closest_food()
             final_moves = move_to_target(final_moves, target)
