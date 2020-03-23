@@ -317,8 +317,11 @@ possible_moves = simulate_move(allsnakes, 0)
 final_moves = list(possible_moves.keys())
 print(f"final moves: {final_moves}")
 
-target = closest_food()
-final_moves = move_to_target(final_moves, target)
+if mysnake.size <= max([allsnakes[i].size for i in range (Gdata.snakes)]):
+    print("getting food")
+    target = closest_food()
+    final_moves = move_to_target(final_moves, target)
+else: print("big enough, not getting food")
 
 move = random.choice(final_moves)
 
