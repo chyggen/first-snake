@@ -299,16 +299,66 @@ def move_to_target(moves, target):
     x_dif = target.x - mysnake.head.x
     y_dif = target.y - mysnake.head.y
 
-    if abs(x_dif) > abs(y_dif):
-        if x_dif > 0 and "right" in moves:
-            return ["right"]
-        if x_dif < 0 and "left" in moves:
-            return ["left"]
-    else:
-        if y_dif > 0 and "down" in moves:
-            return ["down"]
-        if y_dif < 0 and "up" in moves:
-            return ["up"]
+    if x_dif == 0:
+        if y_dif < 0:
+            if "up" in moves:
+                return ["up"]
+            elif ("left" in moves or "right" in moves) and "down" in moves:
+                moves.remove("down")
+        else:
+            if "down" in moves:
+                return ["down"]
+            elif ("left" in moves or "right" in moves) and "up" in moves:
+                moves.remove("up")
+
+    elif y_dif == 0:
+        if x_dif > 0:
+            if "right" in moves:
+                return ["right"]
+            elif ("up" in moves or "down" in moves) and "left" in moves:
+                moves.remove("left")
+        else: 
+            if "left" in moves:
+                return ["left"]
+            elif ("up" in moves or "down" in moves) and "right" in moves:
+                moves.remove("right")
+
+    elif y_dif > 0:
+        if x_dif > 0 and ("down" in moves or "right" in moves):
+            if "up" in moves:
+                moves.remove("up")
+            if "left" in moves:
+                moves.remove("left")
+        elif x_dif < 0 and ("down" in moves or "left" in moves):
+            if "up" in moves:
+                moves.remove("up")
+            if "right" in moves:
+                moves.remove("right")
+                
+    elif y_dif < 0:
+        if x_dif > 0 and ("up" in moves or "right" in moves):
+            if "down" in moves:
+                moves.remove("down")
+            if "left" in moves:
+                moves.remove("left")
+        elif x_dif < 0 and ("up" in moves or "left" in moves):
+            if "down" in moves:
+                moves.remove("down")
+            if "right" in moves:
+                moves.remove("right")
+
+        
+
+    # if abs(x_dif) > abs(y_dif):
+    #     if x_dif > 0 and "right" in moves:
+    #         return ["right"]
+    #     if x_dif < 0 and "left" in moves:
+    #         return ["left"]
+    # else:
+    #     if y_dif > 0 and "down" in moves:
+    #         return ["down"]
+    #     if y_dif < 0 and "up" in moves:
+    #         return ["up"]
 
     return moves
 
