@@ -268,7 +268,7 @@ class Battlesnake(object):
             for i in range(len(Gdata.food)):
                 distance = abs(head.x - Gdata.food[i].x) + abs(head.y - Gdata.food[i].y)
 
-                if distance < min_dist:
+                if distance < min_dist and not (Gdata.food[i].x in {0, Gdata.boardsize.x -1} and Gdata.food[i].y in {0, Gdata.boardsize.y -1}):
                     min_dist = distance
                     closest = coord(Gdata.food[i].x, Gdata.food[i].y)
 
