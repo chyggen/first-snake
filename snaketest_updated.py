@@ -4,7 +4,7 @@ import time
 import copy
 import math
 
-data ={'game': {'id': 'ebd9d171-f4ff-462f-a651-f939b56be919'}, 'turn': 136, 'board': {'height': 11, 'width': 11, 'food': [{'x': 10, 'y': 9}, {'x': 9, 'y': 7}], 'snakes': [{'id': 'gs_YXMw7CRJcqPmYkKwQDkDTRW6', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 6, 'y': 10}, {'x': 6, 'y': 9}, {'x': 5, 'y': 9}, {'x': 5, 'y': 10}, {'x': 4, 'y': 10}, {'x': 4, 'y': 9}, {'x': 3, 'y': 9}, {'x': 3, 'y': 8}, {'x': 3, 'y': 7}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}], 'shout': ''}, {'id': 'gs_QbrkFm4XMVMCtSYS78YpbdjK', 'name': 'Git Adder (2)', 'health': 96, 'body': [{'x': 7, 'y': 9}, {'x': 7, 'y': 8}, {'x': 7, 'y': 7}, {'x': 6, 'y': 7}, {'x': 6, 'y': 8}, {'x': 5, 'y': 8}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 4, 'y': 5}, {'x': 4, 'y': 4}, {'x': 4, 'y': 3}, {'x': 4, 'y': 2}], 'shout': ''}]}, 'you': {'id': 'gs_YXMw7CRJcqPmYkKwQDkDTRW6', 'name': 'ChyggSnake', 'health': 96, 'body': [{'x': 6, 'y': 10}, {'x': 6, 'y': 9}, {'x': 5, 'y': 9}, {'x': 5, 'y': 10}, {'x': 4, 'y': 10}, {'x': 4, 'y': 9}, {'x': 3, 'y': 9}, {'x': 3, 'y': 8}, {'x': 3, 'y': 7}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}], 'shout': ''}}
+data ={'game': {'id': 'adefa48b-b6f9-4ea3-8abd-81610673cd0f'}, 'turn': 94, 'board': {'height': 11, 'width': 11, 'food': [{'x': 4, 'y': 5}], 'snakes': [{'id': 'gs_3gVmww9HbJGRG9Br33tkTMKb', 'name': 'lazysnake', 'health': 95, 'body': [{'x': 5, 'y': 5}, {'x': 6, 'y': 5}, {'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 8, 'y': 4}, {'x': 8, 'y': 3}, {'x': 9, 'y': 3}, {'x': 10, 'y': 3}, {'x': 10, 'y': 4}, {'x': 10, 'y': 5}, {'x': 10, 'y': 6}, {'x': 9, 'y': 6}], 'shout': 'I am a python snake!'}, {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -264,6 +264,16 @@ def simulate_move(allsnakes, itteration):
                 
 
         return final_moves
+
+    elif itteration == 1:
+        for k in copy.deepcopy(possible_moves).keys():
+            allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
+            move(allsnakes_copy2[mine], k)
+            if simulate_move(allsnakes_copy2, itteration + 1) == True:
+                return True
+
+        return False
+
 
     else: 
         if len(possible_moves) == 0:
