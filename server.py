@@ -374,12 +374,17 @@ class Battlesnake(object):
                 biggest_snake = i
 
         target = coord(0,0)
-        if mysnake.size <= max_size:
-            print("too small, targetting food")
-            target = closest_food()
-        else: 
-            print("big enough, targetting biggest snake")
-            target = allsnakes[biggest_snake].head
+        if list(possible_moves.values())[0] == 1:
+            print("in danger, targetting away from closest food")
+            target = coord(Gdata.boardsize.x - closest_food().x - 1, Gdata.boardsize.y - closest_food().y - 1)
+        else:
+            if mysnake.size <= max_size:
+                print("too small, targetting food")
+                target = closest_food()
+            else: 
+                print("big enough, targetting biggest snake")
+                target = allsnakes[biggest_snake].head
+            
         final_moves = move_to_target(final_moves, target)
 
         move = random.choice(final_moves)
