@@ -149,7 +149,7 @@ class Battlesnake(object):
                 if move == "down":
                     snake.head.y += 1
 
-        def check_moves(mysnake, board):
+        def check_moves(mysnake, board, itteration):
             moves = {"left": 0, "right": 0, "up": 0, "down": 0}
 
             #Remove possibility of hitting a wall or the body of a snake
@@ -227,7 +227,7 @@ class Battlesnake(object):
 
             new_board = update_board(allsnakes_copy) 
 
-            possible_moves = check_moves(mysnake_copy, new_board)
+            possible_moves = check_moves(mysnake_copy, new_board, itteration)
             print (f"Possible moves: {possible_moves}")
 
             if itteration == 0:
@@ -251,10 +251,12 @@ class Battlesnake(object):
                 return final_moves
 
             elif itteration == 1:
+                if len(possible_moves) > 1:
+                    itteration += 1
                 for k in copy.deepcopy(possible_moves).keys():
                     allsnakes_copy2 = copy.deepcopy(allsnakes_copy)
                     move(allsnakes_copy2[mine], k)
-                    if simulate_move(allsnakes_copy2, itteration + 1) == True:
+                    if simulate_move(allsnakes_copy2, itteration) == True:
                         return True
 
                 return False
