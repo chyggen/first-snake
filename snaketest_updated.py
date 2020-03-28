@@ -4,7 +4,7 @@ import time
 import copy
 import math
 
-data ={'game': {'id': 'adefa48b-b6f9-4ea3-8abd-81610673cd0f'}, 'turn': 94, 'board': {'height': 11, 'width': 11, 'food': [{'x': 4, 'y': 5}], 'snakes': [{'id': 'gs_3gVmww9HbJGRG9Br33tkTMKb', 'name': 'lazysnake', 'health': 95, 'body': [{'x': 5, 'y': 5}, {'x': 6, 'y': 5}, {'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 8, 'y': 4}, {'x': 8, 'y': 3}, {'x': 9, 'y': 3}, {'x': 10, 'y': 3}, {'x': 10, 'y': 4}, {'x': 10, 'y': 5}, {'x': 10, 'y': 6}, {'x': 9, 'y': 6}], 'shout': 'I am a python snake!'}, {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}}
+data = {'game': {'id': 'adefa48b-b6f9-4ea3-8abd-81610673cd0f'}, 'turn': 94, 'board': {'height': 11, 'width': 11, 'food': [{'x': 4, 'y': 5}], 'snakes': [{'id': 'gs_3gVmww9HbJGRG9Br33tkTMKb', 'name': 'lazysnake', 'health': 95, 'body': [{'x': 5, 'y': 5}, {'x': 6, 'y': 5}, {'x': 7, 'y': 5}, {'x': 8, 'y': 5}, {'x': 8, 'y': 4}, {'x': 8, 'y': 3}, {'x': 9, 'y': 3}, {'x': 10, 'y': 3}, {'x': 10, 'y': 4}, {'x': 10, 'y': 5}, {'x': 10, 'y': 6}, {'x': 9, 'y': 6}], 'shout': 'I am a python snake!'}, {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}]}, 'you': {'id': 'gs_qrfpvv3Kp4S4CDkTQdHStYvR', 'name': 'ChyggSnake', 'health': 98, 'body': [{'x': 8, 'y': 6}, {'x': 8, 'y': 7}, {'x': 8, 'y': 8}, {'x': 7, 'y': 8}, {'x': 6, 'y': 8}, {'x': 6, 'y': 7}, {'x': 5, 'y': 7}, {'x': 5, 'y': 6}, {'x': 4, 'y': 6}, {'x': 3, 'y': 6}, {'x': 2, 'y': 6}, {'x': 2, 'y': 5}], 'shout': ''}}
 #     {
 #     "game": {
 #       "id": "game-id-string"
@@ -72,7 +72,6 @@ class snake:
         self.head = self.body[0]
         self.health = data.get("board").get("snakes")[num].get("health")
         self.size = len(data.get("board").get("snakes")[num].get("body"))
-
 
 
 def empty_board():
