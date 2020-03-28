@@ -280,9 +280,10 @@ def simulate_move(allsnakes, itteration):
     else: 
         if len(possible_moves) == 0:
             return False
-        if len(possible_moves) >= 2:
+        if len(possible_moves) == 3:#2:
             return True
-        if len(possible_moves) == 1:
+        else:
+        # if len(possible_moves) == 1:
 
             for k in possible_moves.keys(): 
                 move(mysnake_copy, k)
